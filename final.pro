@@ -22,12 +22,77 @@ win32 {
 }
 
 SOURCES += ui/mainwindow.cpp \
+    gl/GLDebug.cpp \
+    gl/datatype/FBO.cpp \
+    gl/datatype/IBO.cpp \
+    gl/datatype/VAO.cpp \
+    gl/datatype/VBO.cpp \
+    gl/datatype/VBOAttribMarker.cpp \
+    gl/shaders/CS123Shader.cpp \
+    gl/shaders/Shader.cpp \
+    gl/textures/DepthBuffer.cpp \
+    gl/textures/RenderBuffer.cpp \
+    gl/textures/Texture.cpp \
+    gl/textures/Texture2D.cpp \
+    gl/textures/TextureParameters.cpp \
+    gl/textures/TextureParametersBuilder.cpp \
+    gl/util/FullScreenQuad.cpp \
+    l-systems/generator.cpp \
+    lib/RGBA.cpp \
+    lib/SupportMethods.cpp \
     main.cpp \
     glew-1.10.0/src/glew.c \
+    shapes/CircleVerticesCreator.cpp \
+    shapes/Cone.cpp \
+    shapes/Cube.cpp \
+    shapes/Cylinder.cpp \
+    shapes/ExampleShape.cpp \
+    shapes/LoadedMesh.cpp \
+    shapes/MeshLoader.cpp \
+    shapes/RectangleCreator.cpp \
+    shapes/Shape.cpp \
+    shapes/Sphere.cpp \
+    shapes/Torus.cpp \
+    shapes/TriangleCreator.cpp \
     ui/view.cpp \
     ui/viewformat.cpp
 
 HEADERS += ui/mainwindow.h \
+    gl/GLDebug.h \
+    gl/datatype/FBO.h \
+    gl/datatype/IBO.h \
+    gl/datatype/VAO.h \
+    gl/datatype/VBO.h \
+    gl/datatype/VBOAttribMarker.h \
+    gl/shaders/CS123Shader.h \
+    gl/shaders/Shader.h \
+    gl/shaders/ShaderAttribLocations.h \
+    gl/textures/DepthBuffer.h \
+    gl/textures/RenderBuffer.h \
+    gl/textures/Texture.h \
+    gl/textures/Texture2D.h \
+    gl/textures/TextureParameters.h \
+    gl/textures/TextureParametersBuilder.h \
+    gl/util/FullScreenQuad.h \
+    l-systems/generator.h \
+    l-systems/lnode.h \
+    lib/CS123SceneData.h \
+    lib/RGBA.h \
+    lib/SupportMethods.h \
+    lib/Vertex.h \
+    shapes/CircleVerticesCreator \
+    shapes/CircleVerticesCreator.h \
+    shapes/Cone.h \
+    shapes/Cube.h \
+    shapes/Cylinder.h \
+    shapes/ExampleShape.h \
+    shapes/LoadedMesh.h \
+    shapes/MeshLoader.h \
+    shapes/RectangleCreator.h \
+    shapes/Shape.h \
+    shapes/Sphere.h \
+    shapes/Torus.h \
+    shapes/TriangleCreator.h \
     ui_mainwindow.h \
     glew-1.10.0/include/GL/glew.h \
     ui/view.h \

@@ -1,0 +1,41 @@
+#include "RectangleCreator.h"
+
+RectangleCreator::RectangleCreator()
+{
+
+
+}
+
+std::vector<Vertex> RectangleCreator::buildRectanglePlane(Vertex vertex1, Vertex vertex2, int numLength, int numWidth, int lengthPlane, int widthPlane)
+{
+    std::vector<Vertex> vertexInfo;
+    Vertex startVertex = vertex1;
+    Vertex endVertex = vertex1;
+    endVertex.XYZ[lengthPlane] = vertex2.XYZ[lengthPlane];
+    float stripWidth = (vertex2.XYZ[widthPlane] - vertex1.XYZ[widthPlane]) / numWidth;
+    for (int i = 0; i < numWidth; i++) {
+        endVertex.XYZ[widthPlane] += stripWidth;
+        std::vector<Vertex> stripVertices = buildRectangleStrip(startVertex, endVertex, numLength, lengthPlane, widthPlane);
+        vertexInfo.insert(vertexInfo.end(), stripVertices.begin(), stripVertices.end());
+        vertexInfo.push_back(SKIP_VERTEX);
+        startVertex.XYZ[widthPlane] = endVertex.XYZ[widthPlane];
+    }
+    return vertexInfo;
+}
+
+std::vector<Vertex> RectangleCreator::buildRectangleStrip(Vertex vertex1, Vertex vertex2, int numLength, int lengthPlane, int widthPlane)
+{
+    std::vector<Vertex> vertexInfo;
+    Vertex currentVertex = vertex1;
+    // Counter clockwise
+    //currentVertex.XYZ[widthPlane] = vertex2.XYZ[widthPlane];
+    float triangleLength = (vertex2.XYZ[lengthPlane] - vertex1.XYZ[lengthPlane]) / numLength;
+    for (int i = 0; i <= numLength; i++) {
+        vertexInfo.push_back(currentVertex);
+        currentVertex.XYZ[widthPlane] = vertex2.XYZ[widthPlane];
+        vertexInfo.push_back(currentVertex);
+        currentVertex.XYZ[lengthPlane] += triangleLength;
+        currentVertex.XYZ[widthPlane] = vertex1.XYZ[widthPlane];
+    }
+    return vertexInfo;
+}
