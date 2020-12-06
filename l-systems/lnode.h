@@ -96,6 +96,7 @@ struct LLayer {
     std::unordered_map<std::string, float> variables;
     glm::vec3 location;
     glm::vec3 angle;
+    glm::vec3 scale;
     glm::mat4x4 transform;
     std::string operation;
     std::vector<LShapeNode> shapeNodes;

@@ -64,7 +64,7 @@ void Settings::loadSettingsOrDefaults() {
     useOrbitCamera = s.value("useOrbitCamera", true).toBool();
     cameraFov = s.value("cameraFov", 55).toDouble();
     cameraNear = s.value("cameraNear", 0.1).toDouble();
-    cameraFar = s.value("cameraFar", 50).toDouble();
+    cameraFar = s.value("cameraFar", 500).toDouble();
 
     // Ray
     useSuperSampling = s.value("useSuperSampling", false).toBool();

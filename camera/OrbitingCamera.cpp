@@ -80,7 +80,7 @@ void OrbitingCamera::updateMatrices() {
 void OrbitingCamera::updateProjectionMatrix() {
     // Make sure glm gets a far value that is greater than the near value.
     // Thanks Windows for making far a keyword!
-    float farPlane = std::max(settings.cameraFar, settings.cameraNear + 100.f * FLT_EPSILON);
+    float farPlane = std::max(5000.0f, settings.cameraNear + 500.f * FLT_EPSILON);
     float h = farPlane * glm::tan(glm::radians(settings.cameraFov * 0.5f));
     float w = m_aspectRatio * h;
 

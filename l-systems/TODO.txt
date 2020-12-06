@@ -49,3 +49,25 @@ then add leaves
 then add color
 then add randomness
 Then add texture
+
+
+Bug in rotation and movement
+L(g)->
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  L(g+1)
+  This cr
+  
+  
+  How it should work:
+  Maintain current starting location, vector angle facing, radius/
+  On rotate: Rotate current vector angle facing
+  On leaf: draw a leaf TBD
+  On forward: draw at current location by applying current scaling, ten rotationg, then translating, change current location by moving the length in the direction of angle facing

@@ -96,8 +96,8 @@ void LScene::renderGeometry() {
     // TODO ALlow materials to switch as part of the created object
     for (int i = 0; i < (int)m_sceneObjects.size(); i++) {
         CS123SceneMaterial objectMaterial = CS123SceneMaterial();
-        objectMaterial.cAmbient = TREE_TRUNK_BROWN;
-        objectMaterial.cDiffuse = TREE_TRUNK_BROWN;
+        objectMaterial.cAmbient = {i * 10.0 / 256.0, i * 10.0/ 256.0, i * 10.0/ 256.0, 1.0};
+//        objectMaterial.cDiffuse = TREE_TRUNK_BROWN;
         // TODO Fix lighting
         //objectMaterial.cAmbient *= m_globalLight.ka;
         //objectMaterial.cDiffuse *= m_globalLight.kd;

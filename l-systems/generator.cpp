@@ -6,8 +6,9 @@
 #include "l-systems/lnode.h"
 #include <memory>
 #include <regex>
+#include <glm/gtx/rotate_vector.hpp>
 
-int GENERATION_DEPTH = 4;
+int GENERATION_DEPTH = 5;
 
 Generator::Generator()
 {
@@ -25,13 +26,13 @@ int Generator::readFile(std::string fileName)
 
     std::unordered_map<std::string, LRule> rules = generateRules(predecessors);
 
-    std::vector<LLayer> layers = generateLayers(rules, {0.0,1.0,0.0},{0.0,0.0,0.0});
+    std::vector<LLayer> layers = generateLayers(rules, {0.0,1.0,0.0},{0.0,0.0,0.0}, {0.1,0.1,0.1});
 
     return 1;
 }
 
 std::vector<LLayer> Generator::generateLayers(std::unordered_map<std::string, LRule> &rules,
-                                              glm::vec3 initAngle, glm::vec3 initLoc) {
+                                              glm::vec3 initAngle, glm::vec3 initLoc, glm::vec3 initSize) {
     auto autoRule = rules.find("L");
     LRule initRule = autoRule->second;
     std::unordered_map<std::string, float> initVariables;
@@ -39,13 +40,14 @@ std::vector<LLayer> Generator::generateLayers(std::unordered_map<std::string, LR
     for(int i = 0; i < (int)rules.size(); i++) {
         initVariables.insert({initRule.variableNames[i], 0.0});
     }
-    std::vector<LLayer> root = generateLayer("L", rules, initAngle, initLoc, initVariables, 0);
+
+    std::vector<LLayer> root = generateLayer("L", rules, initAngle, initLoc, initSize, initVariables, 0);
     return root;
 }
 
 // TODO account for the various modifications to angle loc etc.
 std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_map<std::string, LRule> &rules,
-                                glm::vec3 curAngle, glm::vec3 curLocation,
+                                glm::vec3 curAngle, glm::vec3 curLocation, glm::vec3 curScale,
                                 std::unordered_map<std::string, float> variables, int depth) {
 
     auto autoRule = rules.find(rule);
@@ -53,6 +55,7 @@ std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_ma
     LLayer newLayer;
     newLayer.angle = curAngle;
     newLayer.location = curLocation;
+    newLayer.scale = curScale;
     newLayer.variables = variables;
     newLayer.operation = lrule.operation;
 
@@ -63,34 +66,47 @@ std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_ma
         switch(lruleline.get()->ruleType) {
 
             case lineType::FWD: {
+
+                // Adjust the current radius and length by the provided values
                 std::shared_ptr<LFwdRuleLine> line(std::dynamic_pointer_cast<LFwdRuleLine>(lruleline));
-                // TODO Make the cylinder in the right place
-                std::shared_ptr<LShapeNode> newNode = std::make_shared<LShapeNode>();
-                glm::mat4x4 transform;
                 float length = SupportMethods::parseIntoFloat(line.get()->length, variables);
                 float radius = SupportMethods::parseIntoFloat(line.get()->radius, variables);
                 glm::vec3 scale = {radius, length, radius};
-                transform = glm::scale(transform, scale);
+                newLayer.scale *= scale;
+
+                // Paint the shape by using the current scale, applying the current rotation, and then translating
+                std::shared_ptr<LShapeNode> newNode = std::make_shared<LShapeNode>();
+                glm::mat4x4 transform = glm::mat4x4(1);
+                transform = glm::translate(transform, newLayer.location);
                 transform = glm::rotate(transform, newLayer.angle.x, glm::vec3(1.0, 0.0, 0.0));
                 transform = glm::rotate(transform, newLayer.angle.y, glm::vec3(0.0, 1.0, 0.0));
                 transform = glm::rotate(transform, newLayer.angle.z, glm::vec3(0.0, 0.0, 1.0));
-                glm::vec3 newDistance = newLayer.angle * length;
-                newLayer.location += newDistance;
-                transform = glm::translate(transform, newLayer.location);
+//                std::cout << transform[3].y << std::endl;
+//                std::cout << newLayer.location.y<< std::endl;
+                transform = glm::scale(transform, newLayer.scale);
+//                std::cout << transform[3].y << std::endl;
                 newNode.get()->transform = transform;
                 newNode.get()->shape = m_cylinder;
                 m_shapeNodes.push_back(newNode);
 
+                // Then, move the current location in the direction of current facing by the current length
+                // Modified a bit so the new branch is inside the old.
+                glm::vec3 newDistance = glm::normalize(newLayer.angle) * newLayer.scale.y;
+                newLayer.location += newDistance;
                 break;
             }
 
             case lineType::ROT: {
+
+                // Rotate the angle facing by the angle provided
                 std::shared_ptr<LRotRuleLine> line(std::dynamic_pointer_cast<LRotRuleLine>(lruleline));
-                // TODO Clean up radians by having a wrap-around max?
-                float angleX = SupportMethods::parseIntoFloat(line.get()->rot[0], variables);
-                float angleY = SupportMethods::parseIntoFloat(line.get()->rot[1], variables);
-                float angleZ = SupportMethods::parseIntoFloat(line.get()->rot[2], variables);
-                newLayer.angle += glm::vec3(angleX, angleY, angleZ);
+                float angleX = glm::radians(SupportMethods::parseIntoFloat(line.get()->rot[0], variables));
+                float angleY = glm::radians(SupportMethods::parseIntoFloat(line.get()->rot[1], variables));
+                float angleZ = glm::radians(SupportMethods::parseIntoFloat(line.get()->rot[2], variables));
+                newLayer.angle = glm::rotateX(newLayer.angle, angleX);
+                newLayer.angle = glm::rotateY(newLayer.angle, angleY);
+                newLayer.angle = glm::rotateZ(newLayer.angle, angleZ);
+                newLayer.angle = glm::normalize(newLayer.angle);
                 break;
             }
 
@@ -102,11 +118,13 @@ std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_ma
                 if (depth < GENERATION_DEPTH) {
                     std::shared_ptr<LPredRuleLine> pred(std::dynamic_pointer_cast<LPredRuleLine>(lruleline));
                     // TODO Support multiple variables by splitting by commas and doing this multiple times
+
+                    // Parse the new value for the variable used, and create a child branch
                     float newVariableValue = SupportMethods::parseIntoFloat(pred.get()->rule, variables);
 
                     std::unordered_map<std::string, float> newVariables = variables;
                     newVariables[pred.get()->pred] = newVariableValue;
-                    std::vector<LLayer> children = generateLayer("L", rules, newLayer.angle, newLayer.location, newVariables, depth + 1);
+                    std::vector<LLayer> children = generateLayer("L", rules, newLayer.angle, newLayer.location, newLayer.scale, newVariables, depth + 1);
                     layers.insert( layers.end(), children.begin(), children.end() );
                 }
                 break;
