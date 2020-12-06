@@ -4,6 +4,8 @@
 #include "shapes/Shape.h"
 #include <unordered_map>
 #include "lib/RGBA.h"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/transform.hpp"
 
 enum nodeType{SHAPE, OPERATION, PREDECESSOR};
 
@@ -24,20 +26,20 @@ struct LRuleLine {
 
 struct LFwdRuleLine : public LRuleLine{
     std::string rule;
-    float distance;
-    float radius;
-    float length;
+    std::string distance;
+    std::string radius;
+    std::string length;
 };
 
 struct LRotRuleLine : public LRuleLine{
     std::string rule;
-    glm::vec3 rot;
+    std::string rot[3];
 };
 
 struct LLeafRuleLine : public LRuleLine{
     std::string rule;
-    float size;
-    RGBA color;
+    std::string size;
+    std::string color[4];
 };
 
 struct LPredRuleLine : public LRuleLine{
@@ -47,6 +49,7 @@ struct LPredRuleLine : public LRuleLine{
 
 struct LRule {
     std::vector<std::string> variableNames;
+    std::vector<float> variableValues;
     std::string operation;
     std::vector<std::shared_ptr<LRuleLine>> successorNodes;
 };
@@ -59,10 +62,26 @@ struct LNode {
 struct LShapeNode : public LNode{
     std::shared_ptr<Shape> shape;
     glm::mat4x4 transform;
+    LShapeNode() {
+    }
     LShapeNode(const LShapeNode &node) {
         shape = node.shape;
         transform = node.transform;
     }
+
+    void rotate(float angle, glm::vec3 rotation) {
+        transform = glm::rotate(transform, angle, rotation) * transform;
+    }
+    void translate(glm::vec3 translation) {
+        transform = glm::translate(transform, translation);
+    }
+    void scale(glm::vec3 scale) {
+        transform = glm::scale(transform, scale);
+    }
+    void matrix(glm::mat4x4 matrix) {
+        transform = matrix * transform;
+    }
+
 };
 
 struct LOperationNode : public LNode{
@@ -77,6 +96,7 @@ struct LLayer {
     std::unordered_map<std::string, float> variables;
     glm::vec3 location;
     glm::vec3 angle;
+    glm::mat4x4 transform;
     std::string operation;
     std::vector<LShapeNode> shapeNodes;
     LLayer(){};

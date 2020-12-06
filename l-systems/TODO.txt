@@ -27,3 +27,25 @@ L(g)->
   rot(-1.0, -2.0, -1.0)
   fwd(5.0, 1.0)
   leaf(1.5, 0.1, 0.9, 0.1, 1.0);
+  
+Next work to do: work on brackets and then + - * / and then variables and then randomization
+
+
+Load Phong Shader in and paint each of the cylinders being made.
+
+RRTC*
+Perception and capabilitty
+situational awareness
+
+
+
+Break down until innermost parenthesis, then get a value, then replace it in the string and repeat
+
+Integrate https://libraries.io/github/cparse/cparse and then set up the layers properly to use it.
+Then paint properly
+There's some sort of error with the last cylinder
+** By Sunday
+then add leaves
+then add color
+then add randomness
+Then add texture

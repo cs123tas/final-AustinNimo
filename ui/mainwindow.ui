@@ -6,168 +6,502 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>861</width>
-    <height>600</height>
+    <width>765</width>
+    <height>597</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>A CS123 Final</string>
+   <string>CS 123: Introduction to Computer Graphics</string>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks|QMainWindow::VerticalTabs</set>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTabWidget" name="tabWidget">
-    <property name="geometry">
-     <rect>
-      <x>242</x>
-      <y>0</y>
-      <width>601</width>
-      <height>3091</height>
-     </rect>
-    </property>
-    <property name="tabPosition">
-     <enum>QTabWidget::North</enum>
-    </property>
-    <property name="currentIndex">
-     <number>0</number>
-    </property>
-    <widget class="QWidget" name="tabModel">
-     <attribute name="title">
-      <string>Model</string>
-     </attribute>
-     <layout class="QGridLayout" name="gridLayout_11">
-      <property name="leftMargin">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="1">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="tabPosition">
+       <enum>QTabWidget::North</enum>
+      </property>
+      <property name="currentIndex">
        <number>0</number>
       </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QScrollArea" name="scrollArea">
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+      <widget class="QWidget" name="tab3D">
+       <attribute name="title">
+        <string>3D</string>
+       </attribute>
+       <widget class="QWidget" name="canvas3D" native="true">
+        <property name="geometry">
+         <rect>
+          <x>320</x>
+          <y>40</y>
+          <width>400</width>
+          <height>400</height>
+         </rect>
         </property>
-        <property name="frameShadow">
-         <enum>QFrame::Plain</enum>
-        </property>
-        <property name="lineWidth">
-         <number>0</number>
-        </property>
-        <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarAsNeeded</enum>
-        </property>
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarAsNeeded</enum>
-        </property>
-        <property name="widgetResizable">
-         <bool>true</bool>
-        </property>
-        <widget class="QWidget" name="canvasModel">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>595</width>
-           <height>3065</height>
-          </rect>
-         </property>
-        </widget>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="tabScene">
-     <attribute name="title">
-      <string>Scene</string>
-     </attribute>
-     <layout class="QGridLayout" name="gridLayout_12">
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QWidget" name="canvasScene" native="true"/>
-      </item>
-     </layout>
-    </widget>
-   </widget>
-   <widget class="QDockWidget" name="loadLSystemDock">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>246</width>
-      <height>601</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="floating">
-     <bool>false</bool>
-    </property>
-    <property name="allowedAreas">
-     <set>Qt::AllDockWidgetAreas</set>
-    </property>
-    <property name="windowTitle">
-     <string>LSystems</string>
-    </property>
-    <widget class="QWidget" name="lSystemDockContents">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <widget class="QWidget" name="emptySpaceAbove" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
        </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="loadLSystemFileButton">
-        <property name="text">
-         <string>Load L-System File</string>
+       <widget class="QDockWidget" name="loadLSystemDock">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>20</y>
+          <width>211</width>
+          <height>391</height>
+         </rect>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QWidget" name="emptySpaceBelow" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>50</height>
-         </size>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
+        <property name="floating">
+         <bool>false</bool>
+        </property>
+        <property name="allowedAreas">
+         <set>Qt::AllDockWidgetAreas</set>
+        </property>
+        <property name="windowTitle">
+         <string>LSystems</string>
+        </property>
+        <widget class="QWidget" name="lSystemDockContents">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <widget class="QCheckBox" name="useLightingCheckbox">
+            <property name="text">
+             <string>Use lighting</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="loadLSystemFileButton">
+            <property name="text">
+             <string>Load L-System File</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="shapeParameters">
+            <property name="title">
+             <string>Shape Parameters</string>
+            </property>
+            <widget class="QLabel" name="shapeParameterLabel1">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>19</y>
+               <width>16</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>1</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="shapeParameterLabel2">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>46</y>
+               <width>16</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>2</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="shapeParameterLabel3">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>73</y>
+               <width>16</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>3</string>
+             </property>
+            </widget>
+            <widget class="QSlider" name="shapeParameterSlider1">
+             <property name="geometry">
+              <rect>
+               <x>22</x>
+               <y>19</y>
+               <width>100</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+            <widget class="QSlider" name="shapeParameterSlider2">
+             <property name="geometry">
+              <rect>
+               <x>22</x>
+               <y>46</y>
+               <width>100</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+            <widget class="QSlider" name="shapeParameterSlider3">
+             <property name="geometry">
+              <rect>
+               <x>22</x>
+               <y>73</y>
+               <width>100</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="shapeParameterTextbox1">
+             <property name="geometry">
+              <rect>
+               <x>128</x>
+               <y>20</y>
+               <width>40</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>40</width>
+               <height>16777215</height>
+              </size>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="shapeParameterTextbox2">
+             <property name="geometry">
+              <rect>
+               <x>128</x>
+               <y>47</y>
+               <width>40</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>40</width>
+               <height>16777215</height>
+              </size>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="shapeParameterTextbox3">
+             <property name="geometry">
+              <rect>
+               <x>128</x>
+               <y>74</y>
+               <width>40</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>40</width>
+               <height>16777215</height>
+              </size>
+             </property>
+            </widget>
+            <widget class="QGroupBox" name="shapeType">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>100</y>
+               <width>106</width>
+               <height>180</height>
+              </rect>
+             </property>
+             <property name="title">
+              <string>Shape Type</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <property name="topMargin">
+               <number>5</number>
+              </property>
+              <property name="bottomMargin">
+               <number>5</number>
+              </property>
+              <item>
+               <widget class="QRadioButton" name="shapeTypeCube">
+                <property name="text">
+                 <string>Cube</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="shapeTypeCone">
+                <property name="text">
+                 <string>Cone</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="shapeTypeSphere">
+                <property name="text">
+                 <string>Sphere</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="shapeTypeCylinder">
+                <property name="text">
+                 <string>Cylinder</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="shapeTypeTorus">
+                <property name="text">
+                 <string>Torus</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="shapeTypeSpecial1">
+                <property name="text">
+                 <string>Loaded Mesh</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="shapeTypeSpecial2">
+                <property name="text">
+                 <string>Special 2</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
-      </item>
-     </layout>
-    </widget>
-   </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>765</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionUseOrbitingCamera"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuToolbars">
+    <property name="title">
+     <string>&amp;Toolbars</string>
+    </property>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuToolbars"/>
+  </widget>
+  <action name="actionNew">
+   <property name="text">
+    <string>&amp;New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>&amp;Open...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>&amp;Save...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionRevert">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Revert Image</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionCopy3Dto2D">
+   <property name="text">
+    <string>Copy &amp;3D tab to 2D tab</string>
+   </property>
+  </action>
+  <action name="actionClear">
+   <property name="text">
+    <string>&amp;Clear Image</string>
+   </property>
+   <property name="toolTip">
+    <string>Clear Image</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionUseOrbitingCamera">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Use Orbiting Camera</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionQuit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionOpen</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>fileOpen()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>1165</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>checkAllRayFeatures()</slot>
+  <slot>uncheckAllRayFeatures()</slot>
+  <slot>setAspectRatioText()</slot>
+  <slot>fileNew()</slot>
+  <slot>fileOpen()</slot>
+  <slot>fileSave()</slot>
+  <slot>renderImage()</slot>
+  <slot>cancelRender()</slot>
+  <slot>fileCopy3Dto2D()</slot>
+  <slot>setCameraAxisX()</slot>
+  <slot>setCameraAxisY()</slot>
+  <slot>setCameraAxisZ()</slot>
+  <slot>updateCameraTranslation()</slot>
+  <slot>updateCameraRotationN()</slot>
+  <slot>updateCameraRotationV()</slot>
+  <slot>updateCameraRotationU()</slot>
+  <slot>resetUpVector()</slot>
+  <slot>updateCameraClip()</slot>
+  <slot>updateCameraHeightAngle()</slot>
+  <slot>setCameraAxonometric()</slot>
+  <slot>clearImage()</slot>
+  <slot>revertImage()</slot>
+  <slot>resetSliders()</slot>
+ </slots>
 </ui>
