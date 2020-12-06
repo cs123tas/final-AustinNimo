@@ -29,7 +29,7 @@ private:
     std::vector<LLayer> generateLayers(std::unordered_map<std::string, LRule> &rules,
                                        glm::vec3 initAngle, glm::vec3 initLoc, glm::vec3 initSize);
     std::vector<LLayer> generateLayer(std::string rule, std::unordered_map<std::string, LRule> &rules,
-                         glm::vec3 curAngle, glm::vec3 curLocation, glm::vec3 curScale,
+                         glm::vec3 curAngle, glm::vec3 lastAngle, glm::vec3 curLocation, glm::vec3 curScale,
                          std::unordered_map<std::string, float> variables, int depth);
     std::shared_ptr<Cylinder> m_cylinder;
 

@@ -7,8 +7,9 @@
 #include <memory>
 #include <regex>
 #include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtx/quaternion.hpp>
 
-int GENERATION_DEPTH = 5;
+int GENERATION_DEPTH = 3;
 
 Generator::Generator()
 {
@@ -41,19 +42,20 @@ std::vector<LLayer> Generator::generateLayers(std::unordered_map<std::string, LR
         initVariables.insert({initRule.variableNames[i], 0.0});
     }
 
-    std::vector<LLayer> root = generateLayer("L", rules, initAngle, initLoc, initSize, initVariables, 0);
+    std::vector<LLayer> root = generateLayer("L", rules, initAngle, initAngle, initLoc, initSize, initVariables, 0);
     return root;
 }
 
 // TODO account for the various modifications to angle loc etc.
 std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_map<std::string, LRule> &rules,
-                                glm::vec3 curAngle, glm::vec3 curLocation, glm::vec3 curScale,
+                                glm::vec3 curAngle, glm::vec3 lastAngle, glm::vec3 curLocation, glm::vec3 curScale,
                                 std::unordered_map<std::string, float> variables, int depth) {
 
     auto autoRule = rules.find(rule);
     LRule lrule = autoRule->second;
     LLayer newLayer;
     newLayer.angle = curAngle;
+    newLayer.lastAngle = lastAngle;
     newLayer.location = curLocation;
     newLayer.scale = curScale;
     newLayer.variables = variables;
@@ -76,14 +78,21 @@ std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_ma
 
                 // Paint the shape by using the current scale, applying the current rotation, and then translating
                 std::shared_ptr<LShapeNode> newNode = std::make_shared<LShapeNode>();
-                glm::mat4x4 transform = glm::mat4x4(1);
+                glm::mat4x4 transform = glm::mat4x4(1.0);
                 transform = glm::translate(transform, newLayer.location);
-                transform = glm::rotate(transform, newLayer.angle.x, glm::vec3(1.0, 0.0, 0.0));
-                transform = glm::rotate(transform, newLayer.angle.y, glm::vec3(0.0, 1.0, 0.0));
-                transform = glm::rotate(transform, newLayer.angle.z, glm::vec3(0.0, 0.0, 1.0));
 //                std::cout << transform[3].y << std::endl;
 //                std::cout << newLayer.location.y<< std::endl;
+                glm::vec3 targetVec = newLayer.angle;
+                glm::quat rotQuat = glm::rotation({0.0,1.0,0.0}, targetVec);
+                glm::mat4 rotationMatrix = glm::toMat4(rotQuat);
+                transform = transform * rotationMatrix;
+                newLayer.lastAngle = newLayer.angle;
+//                transform = glm::rotate(transform, -newLayer.angle.x, glm::vec3(1.0, 0.0, 0.0));
+//                transform = glm::rotate(transform, newLayer.angle.y, glm::vec3(0.0, 1.0, 0.0));
+//                transform = glm::rotate(transform, newLayer.angle.z, glm::vec3(0.0, 0.0, 1.0));
                 transform = glm::scale(transform, newLayer.scale);
+                // Shift the cylinder up so the base starts at y=0;
+                transform = glm::translate(transform, {0.0,.5,0.0});
 //                std::cout << transform[3].y << std::endl;
                 newNode.get()->transform = transform;
                 newNode.get()->shape = m_cylinder;
@@ -91,7 +100,7 @@ std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_ma
 
                 // Then, move the current location in the direction of current facing by the current length
                 // Modified a bit so the new branch is inside the old.
-                glm::vec3 newDistance = glm::normalize(newLayer.angle) * newLayer.scale.y;
+                glm::vec3 newDistance = newLayer.angle * newLayer.scale.y * .9f;
                 newLayer.location += newDistance;
                 break;
             }
@@ -124,7 +133,7 @@ std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_ma
 
                     std::unordered_map<std::string, float> newVariables = variables;
                     newVariables[pred.get()->pred] = newVariableValue;
-                    std::vector<LLayer> children = generateLayer("L", rules, newLayer.angle, newLayer.location, newLayer.scale, newVariables, depth + 1);
+                    std::vector<LLayer> children = generateLayer("L", rules, newLayer.angle, newLayer.lastAngle, newLayer.location, newLayer.scale, newVariables, depth + 1);
                     layers.insert( layers.end(), children.begin(), children.end() );
                 }
                 break;

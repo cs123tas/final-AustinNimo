@@ -41,13 +41,12 @@ situational awareness
 
 Break down until innermost parenthesis, then get a value, then replace it in the string and repeat
 
-Integrate https://libraries.io/github/cparse/cparse and then set up the layers properly to use it.
-Then paint properly
-There's some sort of error with the last cylinder
+Get the cylinders facing the right way
 ** By Sunday
 then add leaves
 then add color
 then add randomness
+Then add multiple predecessors
 Then add texture
 
 

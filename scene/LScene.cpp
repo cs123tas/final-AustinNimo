@@ -19,7 +19,13 @@ using namespace CS123::GL;
 
 LScene::LScene()
 {
-    // [SCENEVIEW] Set up anything you need for your Sceneview scene here...
+    // [SCENEVIEW] Set up anything you need for your Sceneview scene here..
+    CS123SceneLightData light;
+    light.id = 0;
+    light.type = LightType::LIGHT_DIRECTIONAL;
+    light.dir = {0.0,-1.0,0.0,0.0};
+    light.color = {1.0,1.0,1.0,1.0};
+    m_sceneLights.push_back(light);
     loadPhongShader();
 }
 
@@ -96,8 +102,9 @@ void LScene::renderGeometry() {
     // TODO ALlow materials to switch as part of the created object
     for (int i = 0; i < (int)m_sceneObjects.size(); i++) {
         CS123SceneMaterial objectMaterial = CS123SceneMaterial();
-        objectMaterial.cAmbient = {i * 10.0 / 256.0, i * 10.0/ 256.0, i * 10.0/ 256.0, 1.0};
-//        objectMaterial.cDiffuse = TREE_TRUNK_BROWN;
+//        objectMaterial.cAmbient = TREE_TRUNK_BROWN;
+        objectMaterial.cAmbient = {(50.0 + i * 2.0) / 256.0, (50.0 + i * 3.0) / 256.0, i * 10.0/ 256.0, 1.0};
+        objectMaterial.cDiffuse = TREE_TRUNK_BROWN;
         // TODO Fix lighting
         //objectMaterial.cAmbient *= m_globalLight.ka;
         //objectMaterial.cDiffuse *= m_globalLight.kd;
