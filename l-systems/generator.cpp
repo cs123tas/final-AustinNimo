@@ -38,8 +38,11 @@ std::vector<LLayer> Generator::generateLayers(std::unordered_map<std::string, LR
     LRule initRule = autoRule->second;
     std::unordered_map<std::string, float> initVariables;
 
-    for(int i = 0; i < (int)rules.size(); i++) {
-        initVariables.insert({initRule.variableNames[i], 0.0});
+    for (auto const& element : rules)
+    {
+        for(int i = 0; i < (int)element.second.variableNames.size(); i++) {
+            initVariables.insert({element.second.variableNames[i], 0.0});
+        }
     }
 
     std::vector<LLayer> root = generateLayer("L", rules, initAngle, initAngle, initLoc, initSize, initVariables, 0);
@@ -181,13 +184,6 @@ std::unordered_map<std::string, LRule> Generator::generateRules(std::vector<std:
                 continue;
             }
             std::shared_ptr<LRuleLine> ruleLine = processRule(line, &newRule);
-            // TODO REMOVE TEST CODE
-            if(ruleLine.get()->ruleType == lineType::ROT) {
-                std::shared_ptr<LRotRuleLine> test(std::dynamic_pointer_cast<LRotRuleLine>(ruleLine));
-                if (test) {
-                    std::cout << test.get()->rule << std::endl;
-                }
-            }
             newRule.successorNodes.push_back(ruleLine);
         }
 
