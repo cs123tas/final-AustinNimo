@@ -1,0 +1,88 @@
+Implement Leaf Creation
+	Shape
+	Color
+	Vertices
+Implement Trunk Creation
+	Using Cylinder?
+	Color
+	Vertices
+
+Update Generator::processXRule
+Currently processFwdRule supports format (float, float, float) for distance, radius, length
+	want to allow using the saved variable and also division, mult, addition, substraction, random numbers, sin, cos.
+processRotRule supports format (float, float, float) angle of rotation
+	want to allow using the saved variable and also division, mult, addition, substraction, random numbers, sin, cos.
+processLeafRule supports format (float, float, float, float, float) for size, r, g, b, a
+	want to allow using the saved variable and also division, mult, addition, substraction, random numbers, sin, cos.
+processPredRule supports format (string) for which variable to use, currently inactive since nothing supports dividing.
+	want to allow updating the variable for the next layer
+	
+	
+vec(float vecX, float vecY, float vecZ, float vecPercent from 0 to 1 of how much to move towards this vector
+new vector is normalize(vecPercent * vec + ((1 - vecPercent) * currentVec))
+
+
+The axiom MUST be named L.
+	
+Example:
+L(g)->
+  fwd(5.0, 1.0)
+  rot(1.0, 2.0, 1.0)
+  L(g)
+  rot(-1.0, -2.0, -1.0)
+  fwd(5.0, 1.0)
+  leaf(1.5, 0.1, 0.9, 0.1, 1.0);
+  
+Next work to do: work on brackets and then + - * / and then variables and then randomization
+
+
+Load Phong Shader in and paint each of the cylinders being made.
+
+RRTC*
+Perception and capabilitty
+situational awareness
+
+
+
+Break down until innermost parenthesis, then get a value, then replace it in the string and repeat
+
+Get the cylinders facing the right way
+** By Sunday
+then add leaves
+then add color
+then add randomness
+Then add multiple predecessors
+Then add texture
+
+
+Bug in rotation and movement
+L(g)->
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  fwd(  0.0, 0.95, 0.2)
+  L(g+1)
+  This cr
+  
+  Top of file globals
+  Per object color:
+  Randomness
+  Loading in models
+  A few more tree models
+  
+  
+Goals:
+Stumbling Blocks:
+Split up who did what
+  
+  
+  How it should work:
+  Maintain current starting location, vector angle facing, radius/
+  On rotate: Rotate current vector angle facing
+  On leaf: draw a leaf TBD
+  On forward: draw at current location by applying current scaling, ten rotationg, then translating, change current location by moving the length in the direction of angle facing
