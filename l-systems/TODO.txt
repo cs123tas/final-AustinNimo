@@ -16,6 +16,11 @@ processLeafRule supports format (float, float, float, float, float) for size, r,
 	want to allow using the saved variable and also division, mult, addition, substraction, random numbers, sin, cos.
 processPredRule supports format (string) for which variable to use, currently inactive since nothing supports dividing.
 	want to allow updating the variable for the next layer
+	
+	
+vec(float vecX, float vecY, float vecZ, float vecPercent from 0 to 1 of how much to move towards this vector
+new vector is normalize(vecPercent * vec + ((1 - vecPercent) * currentVec))
+
 
 The axiom MUST be named L.
 	
@@ -69,6 +74,11 @@ L(g)->
   Randomness
   Loading in models
   A few more tree models
+  
+  
+Goals:
+Stumbling Blocks:
+Split up who did what
   
   
   How it should work:

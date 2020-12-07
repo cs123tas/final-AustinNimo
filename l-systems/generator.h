@@ -25,6 +25,7 @@ private:
     std::shared_ptr<LRotRuleLine> processRotRule(std::string line, LRule *lineRule);
     std::shared_ptr<LLeafRuleLine> processLeafRule(std::string line, LRule *lineRule);
     std::shared_ptr<LPredRuleLine> processPredRule(std::string line, LRule *lineRule);
+    std::shared_ptr<LVecRuleLine> processVecRule(std::string line, LRule *lineRule);
     std::unordered_map<std::string, LRule> generateRules(std::vector<std::string> predecessors);
     std::vector<LLayer> generateLayers(std::unordered_map<std::string, LRule> &rules,
                                        glm::vec3 initAngle, glm::vec3 initLoc, glm::vec3 initSize);

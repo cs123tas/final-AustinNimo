@@ -108,6 +108,23 @@ std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_ma
                 break;
             }
 
+            case lineType::VEC: {
+                std::shared_ptr<LVecRuleLine> line(std::dynamic_pointer_cast<LVecRuleLine>(lruleline));
+                float vecX = glm::radians(SupportMethods::parseIntoFloat(line.get()->vector[0], variables));
+                float vecY = glm::radians(SupportMethods::parseIntoFloat(line.get()->vector[1], variables));
+                float vecZ = glm::radians(SupportMethods::parseIntoFloat(line.get()->vector[2], variables));
+                float percentage = SupportMethods::parseIntoFloat(line.get()->percent, variables);
+
+                // Obtain a vector in between the current and the destination vector, according to the percentage value
+                glm::vec3 destVec = glm::normalize(glm::vec3(vecX, vecY, vecZ));
+                glm::vec3 mergedVec = percentage * destVec + (newLayer.angle * (1.0f - percentage));
+
+                newLayer.angle = glm::normalize(mergedVec);
+                break;
+
+
+            }
+
             case lineType::ROT: {
 
                 // Rotate the angle facing by the angle provided
@@ -216,6 +233,8 @@ std::shared_ptr<LRuleLine> Generator::processRule(std::string line, LRule *lineR
             return processRotRule(rest, lineRule);
         case lineType::LEAF:
             return processLeafRule(rest, lineRule);
+        case lineType::VEC:
+            return processVecRule(rest, lineRule);
         case lineType::PRED:
             std::shared_ptr<LPredRuleLine> returnRule = processPredRule(rest, lineRule);
             // TODO support more than one variable
@@ -226,7 +245,6 @@ std::shared_ptr<LRuleLine> Generator::processRule(std::string line, LRule *lineR
 }
 
 
-// TODO Finish
 std::shared_ptr<LFwdRuleLine> Generator::processFwdRule(std::string line, LRule *lineRule) {
     std::shared_ptr<LFwdRuleLine> returnRule = std::make_shared<LFwdRuleLine>();
 
@@ -250,7 +268,6 @@ std::shared_ptr<LFwdRuleLine> Generator::processFwdRule(std::string line, LRule 
 }
 
 
-// TODO Finish
 std::shared_ptr<LRotRuleLine> Generator::processRotRule(std::string line, LRule *lineRule) {
     std::shared_ptr<LRotRuleLine> returnRule = std::make_shared<LRotRuleLine>();
     returnRule.get()->ruleType = lineType::ROT;
@@ -273,7 +290,6 @@ std::shared_ptr<LRotRuleLine> Generator::processRotRule(std::string line, LRule 
 }
 
 
-// TODO Finish
 std::shared_ptr<LLeafRuleLine> Generator::processLeafRule(std::string line, LRule *lineRule) {
     std::shared_ptr<LLeafRuleLine> returnRule = std::make_shared<LLeafRuleLine>();
     returnRule.get()->ruleType = lineType::LEAF;
@@ -298,7 +314,28 @@ std::shared_ptr<LLeafRuleLine> Generator::processLeafRule(std::string line, LRul
 
 }
 
-// TODO Finish
+std::shared_ptr<LVecRuleLine> Generator::processVecRule(std::string line, LRule *lineRule) {
+    std::shared_ptr<LVecRuleLine> returnRule = std::make_shared<LVecRuleLine>();
+    returnRule.get()->ruleType = lineType::VEC;
+
+    // Remove \r and \n from the line
+    line.erase( std::remove(line.begin(), line.end(), '\r'), line.end() );
+    line.erase( std::remove(line.begin(), line.end(), '\n'), line.end() );
+
+    returnRule.get()->rule = line;
+
+    std::regex removeParenComma(",");
+    std::vector<std::string> vals = SupportMethods::splitRegex(line, removeParenComma);
+
+    returnRule.get()->vector[0] = vals[0];
+    returnRule.get()->vector[1] = vals[1];
+    returnRule.get()->vector[2] = vals[2];
+
+    returnRule.get()->percent = vals[3].substr(0, vals[3].size() - 1);
+
+    return returnRule;
+}
+
 std::shared_ptr<LPredRuleLine> Generator::processPredRule(std::string line, LRule *lineRule) {
     std::shared_ptr<LPredRuleLine> returnRule = std::make_shared<LPredRuleLine>();
     returnRule.get()->ruleType = lineType::PRED;

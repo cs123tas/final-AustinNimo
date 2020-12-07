@@ -56,18 +56,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     dataBind();
 
-    QList<QRadioButton*> a;
-
-    a.clear();
-    a += ui->shapeTypeCone;
-    a += ui->shapeTypeCube;
-    a += ui->shapeTypeCylinder;
-    a += ui->shapeTypeTorus;
-    a += ui->shapeTypeSpecial1;
-    a += ui->shapeTypeSpecial2;
-    foreach (QRadioButton *rb, a)
-        connect(rb, SIGNAL(clicked()), this, SLOT(activateCanvas3D()));
-
     QWidget *widget = ui->tabWidget->currentWidget();
     ui->tabWidget->setCurrentWidget(ui->tab3D);
     show();
@@ -111,23 +99,6 @@ void MainWindow::dataBind() {
     m_buttonGroups.push_back(shapesButtonGroup);
     m_buttonGroups.push_back(filterButtonGroup);
 
-    BIND(ChoiceBinding::bindRadioButtons(
-            shapesButtonGroup,
-            NUM_SHAPE_TYPES,
-            settings.shapeType,
-            ui->shapeTypeCube,
-            ui->shapeTypeCone,
-            ui->shapeTypeSphere,
-            ui->shapeTypeCylinder,
-            ui->shapeTypeTorus,
-            ui->shapeTypeSpecial1,
-            ui->shapeTypeSpecial2))
-    BIND(IntBinding::bindSliderAndTextbox(
-        ui->shapeParameterSlider1, ui->shapeParameterTextbox1, settings.shapeParameter1, 1.f, 100.f))
-    BIND(IntBinding::bindSliderAndTextbox(
-        ui->shapeParameterSlider2, ui->shapeParameterTextbox2, settings.shapeParameter2, 1.f, 100.f))
-    BIND(FloatBinding::bindSliderAndTextbox(
-        ui->shapeParameterSlider3, ui->shapeParameterTextbox3, settings.shapeParameter3, 1.f, 100.f))
     BIND(BoolBinding::bindCheckbox(ui->useLightingCheckbox, settings.useLighting))
 
     BIND(ChoiceBinding::bindTabs(ui->tabWidget, settings.currentTab))
@@ -206,7 +177,6 @@ void MainWindow::fileOpen() {
             std::vector<Vertex> vertices = loader.getVertices();
             std::vector<int> indices = loader.getIndices();
             m_canvas3D->loadMesh(vertices, indices);
-            ui->shapeTypeSpecial1->setChecked(true);
 
         }
     }

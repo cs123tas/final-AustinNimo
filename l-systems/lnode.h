@@ -10,13 +10,14 @@
 enum nodeType{SHAPE, OPERATION, PREDECESSOR};
 
 // Types of rules
-enum lineType{ROT, FWD, LEAF, PRED};
+enum lineType{ROT, FWD, LEAF, PRED, VEC};
 
 // Map from the string in a file to the enum
 static std::unordered_map<std::string,lineType> lineMap = {
     {"rot",lineType::ROT},
     {"fwd",lineType::FWD},
     {"leaf",lineType::LEAF},
+    {"vec",lineType::VEC},
     {"leaf",lineType::PRED}};
 
 struct LRuleLine {
@@ -44,6 +45,12 @@ struct LLeafRuleLine : public LRuleLine{
 
 struct LPredRuleLine : public LRuleLine{
     std::string pred;
+    std::string rule;
+};
+
+struct LVecRuleLine : public LRuleLine{
+    std::string vector[3];
+    std::string percent;
     std::string rule;
 };
 
