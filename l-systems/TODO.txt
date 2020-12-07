@@ -64,6 +64,12 @@ L(g)->
   L(g+1)
   This cr
   
+  Top of file globals
+  Per object color:
+  Randomness
+  Loading in models
+  A few more tree models
+  
   
   How it should work:
   Maintain current starting location, vector angle facing, radius/

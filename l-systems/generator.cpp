@@ -127,16 +127,18 @@ std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_ma
                 break;
             }
             case lineType::PRED: {
-                if (depth < GENERATION_DEPTH) {
-                    std::shared_ptr<LPredRuleLine> pred(std::dynamic_pointer_cast<LPredRuleLine>(lruleline));
+            std::shared_ptr<LPredRuleLine> pred(std::dynamic_pointer_cast<LPredRuleLine>(lruleline));
+            float newVariableValue = SupportMethods::parseIntoFloat(pred.get()->rule, variables);
+                if (newVariableValue < GENERATION_DEPTH) {
                     // TODO Support multiple variables by splitting by commas and doing this multiple times
 
                     // Parse the new value for the variable used, and create a child branch
                     float newVariableValue = SupportMethods::parseIntoFloat(pred.get()->rule, variables);
 
                     std::unordered_map<std::string, float> newVariables = variables;
-                    newVariables[pred.get()->pred] = newVariableValue;
-                    std::vector<LLayer> children = generateLayer("L", rules, newLayer.angle, newLayer.lastAngle, newLayer.location, newLayer.scale, newVariables, depth + 1);
+                    // TODO Support multiple variables by saving a list of variables used and updating these
+                    newVariables[std::string(1,pred.get()->rule[0])] = newVariableValue;
+                    std::vector<LLayer> children = generateLayer(pred.get()->pred, rules, newLayer.angle, newLayer.lastAngle, newLayer.location, newLayer.scale, newVariables, newVariableValue);
                     layers.insert( layers.end(), children.begin(), children.end() );
                 }
                 break;
@@ -151,7 +153,9 @@ std::unordered_map<std::string, LRule> Generator::generateRules(std::vector<std:
     std::unordered_map<std::string, LRule> rules;
 
     for(int i = 0; i < (int)predecessors.size(); i++) {
-
+        if (predecessors[i] == "\r" || predecessors[i] == "\n" || predecessors[i] =="\r\n") {
+            continue;
+        }
         LRule newRule;
 
         // Remove \r and \n from the predecessor
@@ -180,7 +184,7 @@ std::unordered_map<std::string, LRule> Generator::generateRules(std::vector<std:
         std::string line;
         while (std::getline(ruleStream, line)) {
             // ignore newline only lines
-            if (line == "\r" || line == "\n") {
+            if (line == "\r" || line == "\n" || line =="\r\n") {
                 continue;
             }
             std::shared_ptr<LRuleLine> ruleLine = processRule(line, &newRule);
@@ -215,7 +219,7 @@ std::shared_ptr<LRuleLine> Generator::processRule(std::string line, LRule *lineR
         case lineType::PRED:
             std::shared_ptr<LPredRuleLine> returnRule = processPredRule(rest, lineRule);
             // TODO support more than one variable
-            returnRule.get()->pred = lineRule->variableNames[0];
+            returnRule.get()->pred = ruleType;
             return returnRule;
     }
     return nullptr;
