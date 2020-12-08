@@ -3,4 +3,7 @@
         <file alias="default.frag">shaders/shader.frag</file>
         <file alias="default.vert">shaders/shader.vert</file>
     </qresource>
+    <qresource prefix="/obj">
+        <file>l-systems/leaf.obj</file>
+    </qresource>
 </RCC>

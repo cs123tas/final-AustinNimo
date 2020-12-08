@@ -11,8 +11,6 @@
 
 #include <sstream>
 
-//TODO Allow editing the trunk color
-CS123SceneColor TREE_TRUNK_BROWN(0.324,0.207,0.039,1.0);
 
 using namespace CS123::GL;
 
@@ -102,12 +100,8 @@ void LScene::renderGeometry() {
     // TODO ALlow materials to switch as part of the created object
     for (int i = 0; i < (int)m_sceneObjects.size(); i++) {
         CS123SceneMaterial objectMaterial = CS123SceneMaterial();
-        objectMaterial.cAmbient = TREE_TRUNK_BROWN;
-        //objectMaterial.cAmbient = TREE_TRUNK_BROWN;
-        objectMaterial.cDiffuse = TREE_TRUNK_BROWN;
-        // TODO Fix lighting
-        //objectMaterial.cAmbient *= m_globalLight.ka;
-        //objectMaterial.cDiffuse *= m_globalLight.kd;
+        objectMaterial.cAmbient = m_sceneObjects[i].get()->color;
+        objectMaterial.cDiffuse = m_sceneObjects[i].get()->color;
         m_phongShader->applyMaterial(objectMaterial);
         m_phongShader->setUniform("m", m_sceneObjects[i]->transform);
 

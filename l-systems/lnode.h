@@ -6,6 +6,7 @@
 #include "lib/RGBA.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform.hpp"
+#include "lib/CS123SceneData.h"
 
 enum nodeType{SHAPE, OPERATION, PREDECESSOR};
 
@@ -39,7 +40,9 @@ struct LRotRuleLine : public LRuleLine{
 
 struct LLeafRuleLine : public LRuleLine{
     std::string rule;
-    std::string size;
+    std::string length;
+    std::string width;
+    std::string thickness;
     std::string color[4];
 };
 
@@ -69,6 +72,7 @@ struct LNode {
 struct LShapeNode : public LNode{
     std::shared_ptr<Shape> shape;
     glm::mat4x4 transform;
+    glm::vec4 color;
     LShapeNode() {
     }
     LShapeNode(const LShapeNode &node) {

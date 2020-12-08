@@ -12,7 +12,7 @@ Currently processFwdRule supports format (float, float, float) for distance, rad
 	want to allow using the saved variable and also division, mult, addition, substraction, random numbers, sin, cos.
 processRotRule supports format (float, float, float) angle of rotation
 	want to allow using the saved variable and also division, mult, addition, substraction, random numbers, sin, cos.
-processLeafRule supports format (float, float, float, float, float) for size, r, g, b, a
+processLeafRule supports format (float, float, float, float, float, float, float) for length, width, thickness, r, g, b, a
 	want to allow using the saved variable and also division, mult, addition, substraction, random numbers, sin, cos.
 processPredRule supports format (string) for which variable to use, currently inactive since nothing supports dividing.
 	want to allow updating the variable for the next layer
@@ -48,16 +48,6 @@ situational awareness
 
 Break down until innermost parenthesis, then get a value, then replace it in the string and repeat
 
-Get the cylinders facing the right way
-** By Sunday
-then add leaves
-then add color
-then add randomness
-Then add multiple predecessors
-Then add texture
-
-
-Bug in rotation and movement
 L(g)->
   fwd(  0.0, 0.95, 0.2)
   fwd(  0.0, 0.95, 0.2)

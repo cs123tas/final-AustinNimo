@@ -6,12 +6,15 @@
 #include <vector>
 #include <string>
 #include "glm.hpp"
+#include <QString>
+#include <QFile>
 
 class MeshLoader
 {
 public:
     MeshLoader();
-    void loadMesh(char* fileName);
+    void loadMesh(const char* fileName);
+    void loadMesh(QString fileName);
     std::vector<Vertex> getVertices();
     std::vector<int> getIndices();
 private:

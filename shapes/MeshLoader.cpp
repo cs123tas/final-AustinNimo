@@ -3,7 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-
+#include <QString>
+#include <QTextStream>
 std::unordered_map<Vertex, int, Vertex> m_vertexMap;
 std::vector<Vertex> m_vertices;
 std::vector<int> m_indices;
@@ -16,7 +17,7 @@ MeshLoader::MeshLoader()
 }
 
 // Open a file and load an obj
-void MeshLoader::loadMesh(char* fileName) {
+void MeshLoader::loadMesh(const char* fileName) {
     std::ifstream objFile;
     objFile.open(fileName);
 
@@ -39,6 +40,36 @@ void MeshLoader::loadMesh(char* fileName) {
                   addFace(line);
               }
             }
+    }
+    else std::cout << "Unable to open file";
+}
+
+// Open a file and load an obj
+void MeshLoader::loadMesh(QString fileName) {
+
+    QFile inputFile(fileName);
+    if (inputFile.open(QIODevice::ReadOnly))
+    {
+       QTextStream in(&inputFile);
+       while (!in.atEnd())
+       {
+          QString qLine = in.readLine();
+          std::string line = qLine.toUtf8().constData();
+          auto token = line[0];
+          if (token == 'v') {
+              token = line[1];
+                if (token == ' ') {
+                    addVertex(line);
+                } else if (token == 't') {
+                    addVertexUV(line);
+                } else if (token == 'n') {
+                    addVertexNormal(line);
+                }
+          } else if (token == 'f') {
+              addFace(line);
+          }
+       }
+       inputFile.close();
     }
     else std::cout << "Unable to open file";
 }

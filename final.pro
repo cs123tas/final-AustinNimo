@@ -162,6 +162,7 @@ RESOURCES += \
     resources.qrc
 
 DISTFILES += \
+    l-systems/leaf.obj \
     lib/cparse/.gitignore \
     lib/cparse/.travis.yml \
     lib/cparse/LICENSE.mit \
