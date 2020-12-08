@@ -122,35 +122,6 @@ float SupportMethods::parseIntoFloat(std::string s, std::unordered_map<std::stri
     return evaluation;
 }
 
-//std::string SupportMethods::parseParen(std::string s, LRule *lineRule) {
-//    int firstParen = -1;
-//    int lastParen;
-//    int open = 0;
-//    for(int i = 0; i < (int)s.size();i++) {
-//        char current = s[i];
-//        if (current == '(') {
-//            if (firstParen == -1) {
-//                firstParen = i;
-//            }
-//            open = open + 1;
-//        }
-//        if (current == ')') {
-//            open = open - 1;
-//            if (open == 0) {
-//                // TODO figure out what to do with this
-//                std::string parenValue = parseParen(s.substr(firstParen + 1, i), lineRule);
-//            }
-//        }
-//    }
-//    if (firstParen == -1) {
-//        return parseString(s, lineRule);
-//    } else {
-//        // TODO figure out what actually needs to be here
-//        return s;
-//    }
-//}
-
-
 std::vector<std::string> SupportMethods::splitRegex(std::string s, std::regex r)
 {
   std::vector<std::string> splits;

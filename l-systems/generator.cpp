@@ -8,13 +8,31 @@
 #include <regex>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <QFile>
+#include <QFileInfo>
+#include <QCoreApplication>
 
 int GENERATION_DEPTH = 3;
+//TODO Allow editing the trunk color
+glm::vec4 TREE_TRUNK_BROWN(0.324,0.207,0.039,1.0);
+glm::vec4 LEAF_GREEN(0.227,0.372,0.043,1.0);
 
 Generator::Generator()
 {
     // Determine best cylinder parameters
-    m_cylinder = std::make_shared<Cylinder>(50, 50);
+    m_cylinder = std::make_shared<Cylinder>(20, 20);
+
+    // Load in leaf
+    QString leafFile(":/obj/l-systems/leaf.obj");
+    MeshLoader leafCreator = MeshLoader();
+    leafCreator.loadMesh(leafFile);
+
+    std::vector<Vertex> vertices = leafCreator.getVertices();
+
+    std::vector<int> indices = leafCreator.getIndices();
+
+    m_leaf = std::make_shared<LoadedMesh>(vertices, indices);
+
 
 }
 
@@ -99,6 +117,7 @@ std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_ma
 //                std::cout << transform[3].y << std::endl;
                 newNode.get()->transform = transform;
                 newNode.get()->shape = m_cylinder;
+                newNode.get()->color = TREE_TRUNK_BROWN;
                 m_shapeNodes.push_back(newNode);
 
                 // Then, move the current location in the direction of current facing by the current length
@@ -140,7 +159,34 @@ std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_ma
             }
 
             case lineType::LEAF: {
-                // TODO make a new leaf here
+
+
+                // Adjust the current radius and length by the provided values
+                std::shared_ptr<LLeafRuleLine> line(std::dynamic_pointer_cast<LLeafRuleLine>(lruleline));
+                float r = SupportMethods::parseIntoFloat(line.get()->color[0], variables);
+                float g = SupportMethods::parseIntoFloat(line.get()->color[1], variables);
+                float b = SupportMethods::parseIntoFloat(line.get()->color[2], variables);
+                float a = SupportMethods::parseIntoFloat(line.get()->color[3], variables);
+                float length = SupportMethods::parseIntoFloat(line.get()->length, variables);
+                float thickness = SupportMethods::parseIntoFloat(line.get()->thickness, variables);
+                float width = SupportMethods::parseIntoFloat(line.get()->width, variables);
+                glm::vec3 scale = {length, thickness, width};
+
+                // Paint the shape by using the current scale, applying the current rotation, and then translating
+                std::shared_ptr<LShapeNode> newNode = std::make_shared<LShapeNode>();
+                glm::mat4x4 transform = glm::mat4x4(1.0);
+                transform = glm::translate(transform, newLayer.location);
+                glm::vec3 targetVec = newLayer.angle;
+                glm::quat rotQuat = glm::rotation({0.0,1.0,0.0}, targetVec);
+                glm::mat4 rotationMatrix = glm::toMat4(rotQuat);
+                transform = transform * rotationMatrix;
+                newLayer.lastAngle = newLayer.angle;
+                transform = glm::scale(transform, scale);
+
+                newNode.get()->transform = transform;
+                newNode.get()->shape = m_leaf;
+                newNode.get()->color = {r, g, b, a};
+                m_shapeNodes.push_back(newNode);
                 break;
             }
             case lineType::PRED: {
@@ -303,12 +349,14 @@ std::shared_ptr<LLeafRuleLine> Generator::processLeafRule(std::string line, LRul
     std::regex removeParenComma(",");
     std::vector<std::string> vals = SupportMethods::splitRegex(line, removeParenComma);
 
-    returnRule.get()->size = vals[0];
+    returnRule.get()->length = vals[0];
+    returnRule.get()->width = vals[1];
+    returnRule.get()->thickness = vals[2];
 
-    returnRule.get()->color[0] = vals[1];
-    returnRule.get()->color[1] = vals[2];
-    returnRule.get()->color[2] = vals[3];
-    returnRule.get()->color[3] = vals[4].substr(0, vals[4].size() - 1);
+    returnRule.get()->color[0] = vals[3];
+    returnRule.get()->color[1] = vals[4];
+    returnRule.get()->color[2] = vals[5];
+    returnRule.get()->color[3] = vals[6].substr(0, vals[6].size() - 1);
 
     return returnRule;
 
