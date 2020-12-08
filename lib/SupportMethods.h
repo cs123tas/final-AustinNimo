@@ -32,6 +32,7 @@ public:
 //    static std::string parseParen(std::string s, LRule *lineRule);
     static float parseIntoFloat(std::string s, std::unordered_map<std::string, float> variables);
     static float shuntingYard(std::string s);
+    static float random(float a, float b);
 
 
 

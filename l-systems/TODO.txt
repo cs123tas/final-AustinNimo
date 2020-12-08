@@ -21,7 +21,9 @@ processPredRule supports format (string) for which variable to use, currently in
 vec(float vecX, float vecY, float vecZ, float vecPercent from 0 to 1 of how much to move towards this vector
 new vector is normalize(vecPercent * vec + ((1 - vecPercent) * currentVec))
 
-
+random(float startNumber: float endNumber)
+Returns a random value between the two numbers
+Note the middle is a colon
 The axiom MUST be named L.
 	
 Example:
