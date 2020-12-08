@@ -94,10 +94,28 @@ float SupportMethods::shuntingYard(std::string s) {
     return result.asDouble();
 }
 
+float SupportMethods::random(float a, float b) {
+    float random = ((float) rand()) / (float) RAND_MAX;
+    float diff = b - a;
+    float r = random * diff;
+    return a + r;
+}
+
 // First, replace any variables with the string of their value. Then, parse the rest.
 float SupportMethods::parseIntoFloat(std::string s, std::unordered_map<std::string, float> variables) {
     std::string varsRemovedString = removeVariables(s, variables);
 
+    std::size_t found = varsRemovedString.find_first_of("(");
+    std::string ruleType = varsRemovedString.substr(0, found);
+    std::string rest = varsRemovedString.substr(found + 1);
+    if(ruleType == "random") {
+        std::regex splitColon = std::regex("(:)");
+        std::vector<std::string> minMax = SupportMethods::splitRegex(rest, splitColon);
+        float min = parseIntoFloat(minMax[0], variables);
+        float max = parseIntoFloat(minMax[1].substr(0, minMax[1].size() - 1), variables);
+        float evaluation = random(min, max);
+        return evaluation;
+    }
     // TODO add randomness
     float evaluation = shuntingYard(varsRemovedString);
 
