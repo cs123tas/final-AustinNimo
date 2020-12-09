@@ -11,6 +11,9 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QCoreApplication>
+#include <QRunnable>
+#include <QThreadPool>
+#include <QMutex>
 
 int GENERATION_DEPTH = 3;
 //TODO Allow editing the trunk color
@@ -37,20 +40,192 @@ Generator::Generator()
 }
 
 // Read in the Lsystem file
-int Generator::readFile(std::string fileName)
+std::vector<std::shared_ptr<LShapeNode>> Generator::readFile(std::string fileName, glm::vec3 initAngle, glm::vec3 initLoc, glm::vec3 initSize)
 {
-    std::string file = SupportMethods::get_file_contents(fileName.data());
-    std::regex predex = std::regex("(->|;)");
-    std::vector<std::string> predecessors = SupportMethods::splitRegex(file, predex);
+    try {
+        std::string file = SupportMethods::get_file_contents(fileName.data());
+        std::regex predex = std::regex("(->|;)");
+        std::vector<std::string> predecessors = SupportMethods::splitRegex(file, predex);
 
-    std::unordered_map<std::string, LRule> rules = generateRules(predecessors);
+        std::unordered_map<std::string, LRule> rules = generateRules(predecessors);
 
-    std::vector<LLayer> layers = generateLayers(rules, {0.0,1.0,0.0},{0.0,0.0,0.0}, {0.1,0.1,0.1});
+        generateLayers(rules, initAngle,initLoc, initSize);
+    }
+    catch(...) {
 
-    return 1;
+    }
+    return m_shapeNodes;
 }
 
-std::vector<LLayer> Generator::generateLayers(std::unordered_map<std::string, LRule> &rules,
+
+struct Layer : public QRunnable
+{
+    std::string rule;
+    std::unordered_map<std::string, LRule> &rules;
+    glm::vec3 curAngle;
+    glm::vec3 lastAngle;
+    glm::vec3 curLocation;
+    glm::vec3 curScale;
+    std::unordered_map<std::string, float> variables;
+    int depth;
+    std::vector<std::shared_ptr<LShapeNode>> &nodes;
+    std::shared_ptr<Cylinder> m_cylinder;
+    std::shared_ptr<LoadedMesh> m_leaf;
+    QMutex *mutex;
+
+    Layer(std::string rule, std::unordered_map<std::string, LRule> &rules,
+          glm::vec3 curAngle, glm::vec3 lastAngle, glm::vec3 curLocation, glm::vec3 curScale,
+          std::unordered_map<std::string, float> &variables, int depth, std::vector<std::shared_ptr<LShapeNode>> &nodes, std::shared_ptr<Cylinder> m_cylinder,
+          std::shared_ptr<LoadedMesh> m_leaf, QMutex *mutex) : rule(rule), rules(rules), curAngle(curAngle),
+            lastAngle(lastAngle), curLocation(curLocation), curScale(curScale), variables(variables), depth(depth),
+              nodes(nodes), m_cylinder(m_cylinder), m_leaf(m_leaf), mutex(mutex){}
+    std::vector<LLayer> finalLayer;
+    void run() override final
+    {
+        auto autoRule = rules.find(rule);
+        LRule lrule = autoRule->second;
+        LLayer newLayer;
+        newLayer.angle = curAngle;
+        newLayer.lastAngle = lastAngle;
+        newLayer.location = curLocation;
+        newLayer.scale = curScale;
+        newLayer.variables = variables;
+        newLayer.operation = lrule.operation;
+
+        for(int i = 0; i < (int)lrule.successorNodes.size(); i++) {
+            std::shared_ptr<LRuleLine> lruleline = lrule.successorNodes[i];
+            switch(lruleline.get()->ruleType) {
+
+                case lineType::FWD: {
+
+                    // Adjust the current radius and length by the provided values
+                    std::shared_ptr<LFwdRuleLine> line(std::dynamic_pointer_cast<LFwdRuleLine>(lruleline));
+                    float length = SupportMethods::parseIntoFloat(line.get()->length, variables);
+                    float radius = SupportMethods::parseIntoFloat(line.get()->radius, variables);
+                    glm::vec3 scale = {radius, length, radius};
+                    newLayer.scale *= scale;
+
+                    // Paint the shape by using the current scale, applying the current rotation, and then translating
+                    std::shared_ptr<LShapeNode> newNode = std::make_shared<LShapeNode>();
+                    glm::mat4x4 transform = glm::mat4x4(1.0);
+                    transform = glm::translate(transform, newLayer.location);
+    //                std::cout << transform[3].y << std::endl;
+    //                std::cout << newLayer.location.y<< std::endl;
+                    glm::vec3 targetVec = newLayer.angle;
+                    glm::quat rotQuat = glm::rotation({0.0,1.0,0.0}, targetVec);
+                    glm::mat4 rotationMatrix = glm::toMat4(rotQuat);
+                    transform = transform * rotationMatrix;
+                    newLayer.lastAngle = newLayer.angle;
+    //                transform = glm::rotate(transform, -newLayer.angle.x, glm::vec3(1.0, 0.0, 0.0));
+    //                transform = glm::rotate(transform, newLayer.angle.y, glm::vec3(0.0, 1.0, 0.0));
+    //                transform = glm::rotate(transform, newLayer.angle.z, glm::vec3(0.0, 0.0, 1.0));
+                    transform = glm::scale(transform, newLayer.scale);
+                    // Shift the cylinder up so the base starts at y=0;
+                    transform = glm::translate(transform, {0.0,.5,0.0});
+    //                std::cout << transform[3].y << std::endl;
+                    newNode.get()->transform = transform;
+                    newNode.get()->shape = m_cylinder;
+                    newNode.get()->color = TREE_TRUNK_BROWN;
+                    mutex->lock();
+                    nodes.push_back(newNode);
+                    mutex->unlock();
+                    // Then, move the current location in the direction of current facing by the current length
+                    // Modified a bit so the new branch is inside the old.
+                    glm::vec3 newDistance = newLayer.angle * newLayer.scale.y * .9f;
+                    newLayer.location += newDistance;
+                    break;
+                }
+
+                case lineType::VEC: {
+                    std::shared_ptr<LVecRuleLine> line(std::dynamic_pointer_cast<LVecRuleLine>(lruleline));
+                    float vecX = glm::radians(SupportMethods::parseIntoFloat(line.get()->vector[0], variables));
+                    float vecY = glm::radians(SupportMethods::parseIntoFloat(line.get()->vector[1], variables));
+                    float vecZ = glm::radians(SupportMethods::parseIntoFloat(line.get()->vector[2], variables));
+                    float percentage = SupportMethods::parseIntoFloat(line.get()->percent, variables);
+
+                    // Obtain a vector in between the current and the destination vector, according to the percentage value
+                    glm::vec3 destVec = glm::normalize(glm::vec3(vecX, vecY, vecZ));
+                    glm::vec3 mergedVec = percentage * destVec + (newLayer.angle * (1.0f - percentage));
+
+                    newLayer.angle = glm::normalize(mergedVec);
+                    break;
+
+
+                }
+
+                case lineType::ROT: {
+
+                    // Rotate the angle facing by the angle provided
+                    std::shared_ptr<LRotRuleLine> line(std::dynamic_pointer_cast<LRotRuleLine>(lruleline));
+                    float angleX = glm::radians(SupportMethods::parseIntoFloat(line.get()->rot[0], variables));
+                    float angleY = glm::radians(SupportMethods::parseIntoFloat(line.get()->rot[1], variables));
+                    float angleZ = glm::radians(SupportMethods::parseIntoFloat(line.get()->rot[2], variables));
+                    newLayer.angle = glm::rotateX(newLayer.angle, angleX);
+                    newLayer.angle = glm::rotateY(newLayer.angle, angleY);
+                    newLayer.angle = glm::rotateZ(newLayer.angle, angleZ);
+                    newLayer.angle = glm::normalize(newLayer.angle);
+                    break;
+                }
+
+                case lineType::LEAF: {
+
+
+                    // Adjust the current radius and length by the provided values
+                    std::shared_ptr<LLeafRuleLine> line(std::dynamic_pointer_cast<LLeafRuleLine>(lruleline));
+                    float r = SupportMethods::parseIntoFloat(line.get()->color[0], variables);
+                    float g = SupportMethods::parseIntoFloat(line.get()->color[1], variables);
+                    float b = SupportMethods::parseIntoFloat(line.get()->color[2], variables);
+                    float a = SupportMethods::parseIntoFloat(line.get()->color[3], variables);
+                    float length = SupportMethods::parseIntoFloat(line.get()->length, variables);
+                    float thickness = SupportMethods::parseIntoFloat(line.get()->thickness, variables);
+                    float width = SupportMethods::parseIntoFloat(line.get()->width, variables);
+                    glm::vec3 scale = {length, thickness, width};
+
+                    // Paint the shape by using the current scale, applying the current rotation, and then translating
+                    std::shared_ptr<LShapeNode> newNode = std::make_shared<LShapeNode>();
+                    glm::mat4x4 transform = glm::mat4x4(1.0);
+                    transform = glm::translate(transform, newLayer.location);
+                    glm::vec3 targetVec = newLayer.angle;
+                    glm::quat rotQuat = glm::rotation({0.0,1.0,0.0}, targetVec);
+                    glm::mat4 rotationMatrix = glm::toMat4(rotQuat);
+                    transform = transform * rotationMatrix;
+                    newLayer.lastAngle = newLayer.angle;
+                    transform = glm::scale(transform, scale);
+
+                    newNode.get()->transform = transform;
+                    newNode.get()->shape = m_leaf;
+                    newNode.get()->color = {r, g, b, a};
+                    mutex->lock();
+                    nodes.push_back(newNode);
+                    mutex->unlock();
+                    break;
+                }
+                case lineType::PRED: {
+                std::shared_ptr<LPredRuleLine> pred(std::dynamic_pointer_cast<LPredRuleLine>(lruleline));
+                float newVariableValue = SupportMethods::parseIntoFloat(pred.get()->rule, variables);
+                    if (newVariableValue < GENERATION_DEPTH) {
+                        // TODO Support multiple variables by splitting by commas and doing this multiple times
+
+                        // Parse the new value for the variable used, and create a child branch
+                        float newVariableValue = SupportMethods::parseIntoFloat(pred.get()->rule, variables);
+
+                        std::unordered_map<std::string, float> newVariables = variables;
+                        // TODO Support multiple variables by saving a list of variables used and updating these
+                        newVariables[std::string(1,pred.get()->rule[0])] = newVariableValue;
+
+                        Layer *root = new Layer(pred.get()->pred, rules, newLayer.angle, newLayer.lastAngle, newLayer.location,
+                                                newLayer.scale, newVariables, newVariableValue, nodes, m_cylinder, m_leaf, mutex);
+                        QThreadPool::globalInstance()->start(root);
+                        //generateLayer(pred.get()->pred, rules, newLayer.angle, newLayer.lastAngle, newLayer.location, newLayer.scale, newVariables, newVariableValue);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+};
+
+void Generator::generateLayers(std::unordered_map<std::string, LRule> &rules,
                                               glm::vec3 initAngle, glm::vec3 initLoc, glm::vec3 initSize) {
     auto autoRule = rules.find("L");
     LRule initRule = autoRule->second;
@@ -63,14 +238,19 @@ std::vector<LLayer> Generator::generateLayers(std::unordered_map<std::string, LR
         }
     }
 
-    std::vector<LLayer> root = generateLayer("L", rules, initAngle, initAngle, initLoc, initSize, initVariables, 0);
-    return root;
+    //generateLayer("L", rules, initAngle, initAngle, initLoc, initSize, initVariables, 0);
+    QMutex mutex;
+    Layer *root = new Layer("L", rules, initAngle, initAngle, initLoc, initSize, initVariables, 0, m_shapeNodes, m_cylinder, m_leaf, &mutex);
+    QThreadPool::globalInstance()->start(root);
+    QThreadPool::globalInstance()->waitForDone();
 }
 
+
+
 // TODO account for the various modifications to angle loc etc.
-std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_map<std::string, LRule> &rules,
+void Generator::generateLayer(std::string rule, std::unordered_map<std::string, LRule> &rules,
                                 glm::vec3 curAngle, glm::vec3 lastAngle, glm::vec3 curLocation, glm::vec3 curScale,
-                                std::unordered_map<std::string, float> variables, int depth) {
+                                std::unordered_map<std::string, float> &variables, int depth) {
 
     auto autoRule = rules.find(rule);
     LRule lrule = autoRule->second;
@@ -81,8 +261,6 @@ std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_ma
     newLayer.scale = curScale;
     newLayer.variables = variables;
     newLayer.operation = lrule.operation;
-
-    std::vector<LLayer> layers;
 
     for(int i = 0; i < (int)lrule.successorNodes.size(); i++) {
         std::shared_ptr<LRuleLine> lruleline = lrule.successorNodes[i];
@@ -201,18 +379,15 @@ std::vector<LLayer> Generator::generateLayer(std::string rule, std::unordered_ma
                     std::unordered_map<std::string, float> newVariables = variables;
                     // TODO Support multiple variables by saving a list of variables used and updating these
                     newVariables[std::string(1,pred.get()->rule[0])] = newVariableValue;
-                    std::vector<LLayer> children = generateLayer(pred.get()->pred, rules, newLayer.angle, newLayer.lastAngle, newLayer.location, newLayer.scale, newVariables, newVariableValue);
-                    layers.insert( layers.end(), children.begin(), children.end() );
+                    generateLayer(pred.get()->pred, rules, newLayer.angle, newLayer.lastAngle, newLayer.location, newLayer.scale, newVariables, newVariableValue);
                 }
                 break;
             }
         }
     }
-    layers.push_back(newLayer);
-    return layers;
 }
 
-std::unordered_map<std::string, LRule> Generator::generateRules(std::vector<std::string> predecessors) {
+std::unordered_map<std::string, LRule> Generator::generateRules(std::vector<std::string> &predecessors) {
     std::unordered_map<std::string, LRule> rules;
 
     for(int i = 0; i < (int)predecessors.size(); i++) {

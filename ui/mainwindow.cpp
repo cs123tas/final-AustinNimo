@@ -79,10 +79,11 @@ void MainWindow::loadLSystemFileButton() {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                     DEFAULT_FOLDER,
                                                     tr("Text files (*.txt)"));
-    Generator systemGen;
-    systemGen.readFile(fileName.toLocal8Bit().data());
-    // TODO make this cleaner
-    m_canvas3D->m_lScene.get()->m_sceneObjects = systemGen.m_shapeNodes;
+    if (fileName != "") {
+        Generator systemGen;
+//        systemGen.readFile(fileName.toLocal8Bit().data(), {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, {1.0,1.0,1.0});
+        m_canvas3D->m_lScene.get()->m_sceneObjects = systemGen.readFile(fileName.toLocal8Bit().data(), {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, {1.0,1.0,1.0});
+    }
 }
 
 void MainWindow::dataBind() {
