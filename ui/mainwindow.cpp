@@ -27,6 +27,10 @@ MainWindow::MainWindow(QWidget *parent) :
     qglFormat.setProfile(QGLFormat::CoreProfile);
     qglFormat.setSampleBuffers(true);
     ui->setupUi(this);
+    QGridLayout *glgridLayout = new QGridLayout(ui->widget);
+    //m_glWidget = new GLWidget(qglFormat, this);
+    //m_glWidget->setMinimumSize(100, 100);
+    //glgridLayout->addWidget(m_glWidget, 0, 1);
     QGridLayout *gridLayout = new QGridLayout(ui->canvas3D);
     m_canvas3D = new SupportCanvas3D(qglFormat, this);
     gridLayout->addWidget(m_canvas3D, 0, 1);
