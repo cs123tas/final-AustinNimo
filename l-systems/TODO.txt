@@ -61,18 +61,36 @@ L(g)->
   L(g+1)
   This cr
   
-  Top of file globals
-  Per object color:
-  Randomness
-  Loading in models
-  A few more tree models
   
+  Remaining work:
+  Top of file globals
+  A few more tree models
+
+Leaf colors:
+Leaf Green
+  leaf(1.0, 1.0, 1.0, 0.227, 0.372, 0.043, 1.0)
+Autumn Red-Orange
+  leaf(1.0, 1.0, 1.0, 0.5961, 0.2824, 0.1686, 1.0)
+Autumn Yellow
+  leaf(1.0, 1.0, 1.0, 0.933, 0.815, 0.007, 1.0)
+Autumn Brown
+  leaf(1.0, 1.0, 1.0, 0.588, 0.207, 0.078, 1.0)
+Cherry Blossom Pink
+  leaf(1.0, 1.0, 1.0, 1.0, 0.718, 0.773, 1.0)
+Scarlet Maple
+  leaf(1.0, 1.0, 1.0, 0.694, 0.133, 0.180, 1.0)
+
   
 Goals:
 Stumbling Blocks:
 Split up who did what
-  
-  
+
+Tree Designs I want to make
+Pine
+Oak	Summer/Fall/Winter
+Scarlet Maple
+Sakura
+
   How it should work:
   Maintain current starting location, vector angle facing, radius/
   On rotate: Rotate current vector angle facing
