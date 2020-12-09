@@ -42,8 +42,8 @@ SOURCES += ui/mainwindow.cpp \
     gl/util/FullScreenQuad.cpp \
     l-systems/generator.cpp \
     lib/CS123XmlSceneParser.cpp \
+    lib/FileResourceLoader.cpp \
     lib/RGBA.cpp \
-    lib/ResourceLoader.cpp \
     lib/SupportMethods.cpp \
     lib/cparse/containers.cpp \
     lib/cparse/functions.cpp \
@@ -100,8 +100,8 @@ HEADERS += ui/mainwindow.h \
     lib/CS123ISceneParser.h \
     lib/CS123SceneData.h \
     lib/CS123XmlSceneParser.h \
+    lib/FileResourceLoader.h \
     lib/RGBA.h \
-    lib/ResourceLoader.h \
     lib/SupportMethods.h \
     lib/Vertex.h \
     scene/LScene.h \

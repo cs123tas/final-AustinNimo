@@ -572,27 +572,6 @@ std::shared_ptr<LPredRuleLine> Generator::processPredRule(std::string line, LRul
 
 }
 
-// Read each line in and forward it to the appropriate method
-void Generator::readLine(std::string line) {
-    std::vector<std::string> pieces = SupportMethods::split(line, ":");
-    lineType lineRule = lineMap[pieces[0]];
-    switch(lineRule) {
-        case lineType::FWD:
-            break;
-
-        case lineType::ROT:
-            break;
-
-        case lineType::LEAF:
-            break;
-
-        case lineType::PRED:
-            break;
-    }
-
-    std::cout << pieces[0] << std::endl;
-}
-
 //void Generator::generateProduction(std::string predecessor) {
 
 //}

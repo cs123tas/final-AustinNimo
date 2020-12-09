@@ -5,7 +5,7 @@
 
 #include "Settings.h"
 #include "SupportCanvas3D.h"
-#include "lib/ResourceLoader.h"
+#include "lib/FileResourceLoader.h"
 #include "gl/shaders/CS123Shader.h"
 #include "shapes/Cylinder.h"
 
@@ -32,8 +32,8 @@ LScene::~LScene()
 }
 
 void LScene::loadPhongShader() {
-    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/default.vert");
-    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/default.frag");
+    std::string vertexSource = FileResourceLoader::loadResourceFileToString(":/shaders/default.vert");
+    std::string fragmentSource = FileResourceLoader::loadResourceFileToString(":/shaders/default.frag");
     m_phongShader = std::make_unique<CS123Shader>(vertexSource, fragmentSource);
 }
 
