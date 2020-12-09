@@ -12,6 +12,7 @@
 #include "shapes/MeshLoader.h"
 #include "lib/Vertex.h"
 #include "l-systems/generator.h"
+#include "glwidget.h"
 
 const QString DEFAULT_FOLDER = "D:\\Nodal\\Documents\\GitHub\\final-AustinNimo\\l-systems";
 
@@ -22,15 +23,27 @@ MainWindow::MainWindow(QWidget *parent) :
     // Make sure the settings are loaded before the UI
     settings.loadSettingsOrDefaults();
 
+
     QGLFormat qglFormat;
     qglFormat.setVersion(4, 3);
     qglFormat.setProfile(QGLFormat::CoreProfile);
     qglFormat.setSampleBuffers(true);
     ui->setupUi(this);
-    QGridLayout *gridLayout = new QGridLayout(ui->canvas3D);
+
+
+   // QGridLayout *gridLayout = new QGridLayout(ui->centralWidget);
+     QGridLayout *gridLayout = new QGridLayout(ui->canvas3D);
+
+
+
     m_canvas3D = new SupportCanvas3D(qglFormat, this);
-    gridLayout->addWidget(m_canvas3D, 0, 1);
+
+    gridLayout->addWidget(m_canvas3D, 0,1);
     ui->tabWidget->setCurrentWidget(ui->tab3D);
+
+    GLWidget *glWidget = new GLWidget(qglFormat, this);
+    //glWidget->setMinimumSize(100, 100);
+    gridLayout->addWidget(glWidget, 0, 300);
 
     // Restore the UI settings
     QSettings qtSettings("CS123", "CS123");

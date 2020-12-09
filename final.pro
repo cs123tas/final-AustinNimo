@@ -40,6 +40,7 @@ SOURCES += ui/mainwindow.cpp \
     gl/textures/TextureParameters.cpp \
     gl/textures/TextureParametersBuilder.cpp \
     gl/util/FullScreenQuad.cpp \
+    glwidget.cpp \
     l-systems/generator.cpp \
     lib/CS123XmlSceneParser.cpp \
     lib/RGBA.cpp \
@@ -51,6 +52,7 @@ SOURCES += ui/mainwindow.cpp \
     lib/cparse/shunting-yard.cpp \
     main.cpp \
     glew-1.10.0/src/glew.c \
+    openglshape.cpp \
     scene/LScene.cpp \
     scene/OpenGLScene.cpp \
     scene/Scene.cpp \
@@ -68,6 +70,7 @@ SOURCES += ui/mainwindow.cpp \
     shapes/Sphere.cpp \
     shapes/Torus.cpp \
     shapes/TriangleCreator.cpp \
+    terrain.cpp \
     ui/Databinding.cpp \
     ui/Settings.cpp \
     ui/SupportCanvas3D.cpp \
@@ -95,6 +98,7 @@ HEADERS += ui/mainwindow.h \
     gl/textures/TextureParameters.h \
     gl/textures/TextureParametersBuilder.h \
     gl/util/FullScreenQuad.h \
+    glwidget.h \
     l-systems/generator.h \
     l-systems/lnode.h \
     lib/CS123ISceneParser.h \
@@ -104,6 +108,7 @@ HEADERS += ui/mainwindow.h \
     lib/ResourceLoader.h \
     lib/SupportMethods.h \
     lib/Vertex.h \
+    openglshape.h \
     scene/LScene.h \
     scene/OpenGLScene.h \
     scene/Scene.h \
@@ -122,6 +127,7 @@ HEADERS += ui/mainwindow.h \
     shapes/Sphere.h \
     shapes/Torus.h \
     shapes/TriangleCreator.h \
+    terrain.h \
     ui/Databinding.h \
     ui/Settings.h \
     ui/SupportCanvas3D.h \
@@ -184,5 +190,7 @@ DISTFILES += \
     shaders/normals/normalsArrow.frag \
     shaders/normals/normalsArrow.vert \
     shaders/normals/normalsArrow.vert \
+    shaders/terrain.frag \
+    shaders/terrain.vert \
     shaders/wireframe/wireframe.frag \
     shaders/wireframe/wireframe.vert
