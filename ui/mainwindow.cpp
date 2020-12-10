@@ -190,6 +190,7 @@ void MainWindow::generateTrees(std::string fileName,
 
 void MainWindow::clearTrees() {
     m_canvas3D->m_lScene.get()->m_sceneObjects.clear();
+    m_canvas3D->repaint();
 }
 
 void MainWindow::dataBind() {
