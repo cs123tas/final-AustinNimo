@@ -169,8 +169,7 @@ macx {
 }
 
 RESOURCES += \
-    resources.qrc \
-    shaders/terrain/terrainShaders.qrc
+    resources.qrc
 
 DISTFILES += \
     l-systems/leaf.obj \
@@ -195,7 +194,7 @@ DISTFILES += \
     shaders/normals/normalsArrow.frag \
     shaders/normals/normalsArrow.vert \
     shaders/normals/normalsArrow.vert \
-    shaders/terrain/terrainShader.frag \
-    shaders/terrain/terrainShader.vert \
+    shaders/terrainshader.frag \
+    shaders/terrainshader.vert \
     shaders/wireframe/wireframe.frag \
     shaders/wireframe/wireframe.vert

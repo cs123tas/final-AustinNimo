@@ -13,6 +13,8 @@
 #include "glm/glm.hpp"            // glm::vec*, mat*, and basic glm functions
 #include "glm/gtx/transform.hpp"  // glm::translate, scale, rotate
 #include "glm/gtc/type_ptr.hpp"   // glm::value_ptr
+#include "shaders/CS123Shader.h"
+#include "lib/FileResourceLoader.h"
 
 
 class GLWidget : public QGLWidget {
@@ -35,6 +37,8 @@ private:
 
     /** ID for the shader program. */
     GLuint m_program;
+
+    std::unique_ptr<CS123::GL::CS123Shader> m_shader;
 
     Terrain m_terrain;
 

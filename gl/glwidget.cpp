@@ -1,7 +1,7 @@
 #include "glwidget.h"
 
-#include "cs123_lib/resourceloader.h"
-#include "cs123_lib/errorchecker.h"
+//#include "cs123_lib/resourceloader.h"
+//#include "cs123_lib/errorchecker.h"
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <iostream>
@@ -16,16 +16,21 @@ GLWidget::~GLWidget()
 {}
 
 void GLWidget::initializeGL() {
-    ResourceLoader::initializeGlew();
+    //ResourceLoader::initializeGlew();
+
     resizeGL(width(), height());
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+//    glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_CULL_FACE);
 
-    // Set the color to set the screen when the color buffer is cleared.
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+//    // Set the color to set the screen when the color buffer is cleared.
+//    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-    m_program = ResourceLoader::createShaderProgram(":/shaders/terrain/terrainShader.vert", ":/shaders/terrain/terrainShader.frag");
+    //m_program = ResourceLoader::createShaderProgram(":/shaders/terrain/terrainShader.vert", ":/shaders/terrain/terrainShader.frag");
+
+    std::string vertexSource = FileResourceLoader::loadResourceFileToString(":/shaders/terrain.vert");
+    std::string fragmentSource = FileResourceLoader::loadResourceFileToString(":/shaders/terrain.frag");
+    m_shader = std::make_unique<CS123Shader>(vertexSource, fragmentSource);
     m_terrain.init();
 
     rebuildMatrices();
@@ -34,19 +39,28 @@ void GLWidget::initializeGL() {
 void GLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+
     // Bind shader program.
-    glUseProgram(m_program);
+    //glUseProgram(m_program);
+
+    m_shader->bind();
 
     // Set uniforms.
-    glUniformMatrix4fv(glGetUniformLocation(m_program, "model"), 1, GL_FALSE, glm::value_ptr(m_model));
-    glUniformMatrix4fv(glGetUniformLocation(m_program, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
-    glUniformMatrix4fv(glGetUniformLocation(m_program, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
+//    glUniformMatrix4fv(glGetUniformLocation(m_program, "model"), 1, GL_FALSE, glm::value_ptr(m_model));
+//    glUniformMatrix4fv(glGetUniformLocation(m_program, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
+//    glUniformMatrix4fv(glGetUniformLocation(m_program, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
+
+    m_shader->setUniform("model", glm::value_ptr(m_model));
+    m_shader->setUniform("view", glm::value_ptr(m_view));
+    m_shader->setUniform("projection", glm::value_ptr(m_projection));
 
     // Draw terrain.
     m_terrain.draw();
 
     // Unbind shader program.
-    glUseProgram(0);
+    //glUseProgram(0);
+    m_shader->unbind();
 }
 
 void GLWidget::resizeGL(int w, int h) {
