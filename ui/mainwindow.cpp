@@ -31,12 +31,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QGridLayout *gridLayout = new QGridLayout(ui->canvas3D);
     m_canvas3D = new SupportCanvas3D(qglFormat, this);
     gridLayout->addWidget(m_canvas3D, 0, 1);
-    QGridLayout *glgridLayout = new QGridLayout(ui->widget);
-//    m_glWidget = new GLWidget(qglFormat, this);
-//    m_glWidget->setMinimumSize(100, 100);
-//    glgridLayout->addWidget(m_glWidget, 0, 1);
-
-    ui->tabWidget->setCurrentWidget(ui->tab3D);
 
     // Restore the UI settings
     QSettings qtSettings("CS123", "CS123");
@@ -62,10 +56,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     dataBind();
 
-    QWidget *widget = ui->tabWidget->currentWidget();
-    ui->tabWidget->setCurrentWidget(ui->tab3D);
-    show();
-    ui->tabWidget->setCurrentWidget(widget);
+//    QWidget *widget = ui->tabWidget->currentWidget();
+//    ui->tabWidget->setCurrentWidget(ui->tab3D);
+//    show();
+//    ui->tabWidget->setCurrentWidget(widget);
     show();
     // Connect button signal to appropriate slot
      connect(ui->loadLSystemFileButton, &QPushButton::released, this, &MainWindow::loadLSystemFileButton);
@@ -108,8 +102,6 @@ void MainWindow::dataBind() {
 
     BIND(BoolBinding::bindCheckbox(ui->useLightingCheckbox, settings.useLighting))
 
-    BIND(ChoiceBinding::bindTabs(ui->tabWidget, settings.currentTab))
-
 #undef BIND
 }
 
@@ -151,7 +143,6 @@ void MainWindow::fileOpen() {
     // This opens the 3D tab to initialize OGL so parsing
     // the scene doesn't crash. If you can find a better solution
     // feel free to change this.
-    activateCanvas3D();
     QString file = QFileDialog::getOpenFileName(this, QString(), "/course/cs123/data/");
     if (!file.isNull()) {
         if (file.endsWith(".xml")) {
@@ -171,7 +162,6 @@ void MainWindow::fileOpen() {
                     cam->setHeightAngle(camera.heightAngle);
                 }
 
-                activateCanvas3D();
             } else {
                 QMessageBox::critical(this, "Error", "Could not load scene \"" + file + "\"");
             }
@@ -202,10 +192,6 @@ void MainWindow::setAllEnabled(bool enabled) {
         widget->setEnabled(enabled);
     foreach (QAction *action, actions)
         action->setEnabled(enabled);
-}
-
-void MainWindow::activateCanvas3D() {
-    ui->tabWidget->setCurrentWidget(ui->tab3D);
 }
 
 void MainWindow::setCameraAxisX() {

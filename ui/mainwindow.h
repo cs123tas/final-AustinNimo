@@ -69,9 +69,6 @@ public slots:
     // Displays a dialog box to open a 2D image or 3D scene file.
     void fileOpen();
 
-    // Sets the current tab on the UI to the 3D canvas view.
-    void activateCanvas3D();
-
     // These methods are update different aspects of the 3D camera, and delegate to the Canvas3D.
     void setCameraAxisX();
     void setCameraAxisY();
