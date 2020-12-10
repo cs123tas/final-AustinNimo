@@ -96,3 +96,28 @@ Sakura
   On rotate: Rotate current vector angle facing
   On leaf: draw a leaf TBD
   On forward: draw at current location by applying current scaling, ten rotationg, then translating, change current location by moving the length in the direction of angle facing
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+The five files that look good are in the l-systems folder. You can load a group of them into the scene by using mainwindow.generateTrees.
+
+First you create a std::vector<glm::vec3> of XYZ locations for the base of the trunk. This should look like {{1.0, 0.5, 1.0}} for example, to make one tree at 1, .5, 1. Remember that y is up.
+
+Next is a std::vector<glm::vec3> for the angle that should be the tree's up direction. For example {{0.0,1.0,0.0}} would be one tree pointed the normal direction. These two must have the same amount of vec3s, because that will be how many of the randomly generated tree are placed in the scene.
+
+Finally should be one glm::vec3 of dimensions for the tree. For example {0.1,0.1,0.1} would be a tree shrunk to .1 of its normal size. I find that .1 is about right for the sample terrain currently used.
+
+Then you call generateTrees(QString(":/l-systems/l-systems/OakFall.txt"), locationVec, angleVec, sizeVec);
+Note the QString, this points to the resource file. You can replace OakFall with any of the 5 trees.
+
+The only stuff remaining is your piece, the terrain and the camera movement if you get to it. The lab terrain is currently in terrain.cpp. Please have it in a presentable state by 9 so we can put together the final video. Thanks!

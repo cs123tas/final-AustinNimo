@@ -30,6 +30,11 @@ public:
                                    std::vector<glm::vec3> treeLocations,
                                    std::vector<glm::vec3> treeAngles,
                                    glm::vec3 treeSize);
+
+    void generateTrees(std::string fileName,
+                                   std::vector<glm::vec3> treeLocations,
+                                   std::vector<glm::vec3> treeAngles,
+                                   glm::vec3 treeSize);
     void clearTrees();
 
 protected:

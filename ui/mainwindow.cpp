@@ -122,7 +122,7 @@ void MainWindow::loadLSystemFileButton() {
             std::vector<glm::vec3> angleVec = parseVecs(angles);
             glm::vec3 sizeVec = parseVecs(sizes)[0];
 
-            generateTrees(fileName, locationVec, angleVec, sizeVec);
+            generateTrees(std::string(fileName.toUtf8().data()), locationVec, angleVec, sizeVec);
 
         }
     }
@@ -141,7 +141,20 @@ void MainWindow::generateTrees(QString fileName,
     Generator systemGen;
 
     TreeDistribution newTrees;
-    newTrees.treeNodes = systemGen.readFile(fileName.toLocal8Bit().data(), {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, treeSize);
+    newTrees.treeNodes = systemGen.readFile(fileName, {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, treeSize);
+    newTrees.treeAngles = treeAngles;
+    newTrees.treeLocations = treeLocations;
+    m_canvas3D->m_lScene.get()->m_sceneObjects.push_back(newTrees);
+}
+
+void MainWindow::generateTrees(std::string fileName,
+                               std::vector<glm::vec3> treeLocations,
+                               std::vector<glm::vec3> treeAngles,
+                               glm::vec3 treeSize) {
+    Generator systemGen;
+
+    TreeDistribution newTrees;
+    newTrees.treeNodes = systemGen.readFile(fileName, {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, treeSize);
     newTrees.treeAngles = treeAngles;
     newTrees.treeLocations = treeLocations;
     m_canvas3D->m_lScene.get()->m_sceneObjects.push_back(newTrees);

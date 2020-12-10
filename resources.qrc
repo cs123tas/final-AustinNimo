@@ -5,6 +5,13 @@
         <file alias="terrain.frag">shaders/terrainshader.frag</file>
         <file alias="terrain.vert">shaders/terrainshader.vert</file>
     </qresource>
+    <qresource prefix="/l-systems">
+        <file>l-systems/OakFall.txt</file>
+        <file>l-systems/OakSummer.txt</file>
+        <file>l-systems/OakWinter.txt</file>
+        <file>l-systems/Sakura.txt</file>
+        <file>l-systems/ScarletMaple.txt</file>
+    </qresource>
     <qresource prefix="/obj">
         <file>l-systems/leaf.obj</file>
     </qresource>

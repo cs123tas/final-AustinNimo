@@ -173,6 +173,11 @@ RESOURCES += \
 
 DISTFILES += \
     l-systems/leaf.obj \
+    l-systems/OakFall.txt \
+    l-systems/OakSummer.txt \
+    l-systems/OakWinter.txt \
+    l-systems/Sakura.txt \
+    l-systems/ScarletMaple.txt \
     lib/cparse/.gitignore \
     lib/cparse/.travis.yml \
     lib/cparse/LICENSE.mit \

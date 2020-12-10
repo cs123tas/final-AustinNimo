@@ -4,6 +4,9 @@
 #include <fstream>
 #include <cerrno>
 #include "shunting-yard.cpp"
+#include <QString>
+#include <QFile>
+#include <QTextStream>
 SupportMethods::SupportMethods()
 {
 
@@ -64,6 +67,20 @@ std::string SupportMethods::get_file_contents(const char *filename)
     return returnString;
   }
   throw(errno);
+}
+
+std::string SupportMethods::get_file_contents(QString filename)
+{
+
+    QFile inputFile(filename);
+    if (inputFile.open(QIODevice::ReadOnly)) {
+        QTextStream in(&inputFile);
+        QString qLine = in.readAll();
+        std::string returnString = qLine.toUtf8().constData();
+        returnString.erase(remove(returnString.begin(), returnString.end(), ' '), returnString.end());
+        return returnString;
+    }
+    throw(errno);
 }
 
 

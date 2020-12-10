@@ -16,6 +16,7 @@
 #include <QMutex>
 #include "lib/cparse/shunting-yard.h"
 #include "lib/cparse/builtin-features.inc"
+#include <QTextStream>
 
 int GENERATION_DEPTH = 3;
 //TODO Allow editing the trunk color
@@ -48,6 +49,24 @@ std::vector<std::shared_ptr<LShapeNode>> Generator::readFile(std::string fileNam
 {
     try {
         std::string file = SupportMethods::get_file_contents(fileName.data());
+        std::regex predex = std::regex("(->|;)");
+        std::vector<std::string> predecessors = SupportMethods::splitRegex(file, predex);
+
+        std::unordered_map<std::string, LRule> rules = generateRules(predecessors);
+
+        generateLayers(rules, initAngle,initLoc, initSize);
+    }
+    catch(...) {
+
+    }
+    return m_shapeNodes;
+}
+
+// Read in the Lsystem file
+std::vector<std::shared_ptr<LShapeNode>> Generator::readFile(QString fileName, glm::vec3 initAngle, glm::vec3 initLoc, glm::vec3 initSize)
+{
+    try {
+        std::string file = SupportMethods::get_file_contents(fileName);
         std::regex predex = std::regex("(->|;)");
         std::vector<std::string> predecessors = SupportMethods::splitRegex(file, predex);
 
