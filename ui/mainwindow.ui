@@ -10,6 +10,12 @@
     <height>597</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1253</width>
+    <height>597</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>CS 123: Introduction to Computer Graphics</string>
   </property>

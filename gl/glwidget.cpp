@@ -25,7 +25,7 @@ void GLWidget::initializeGL() {
     // Set the color to set the screen when the color buffer is cleared.
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-    m_program = ResourceLoader::createShaderProgram(":/shaders/shader.vert", ":/shaders/shader.frag");
+    m_program = ResourceLoader::createShaderProgram(":/shaders/terrain/terrainShader.vert", ":/shaders/terrain/terrainShader.frag");
     m_terrain.init();
 
     rebuildMatrices();
