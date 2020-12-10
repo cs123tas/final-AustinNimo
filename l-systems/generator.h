@@ -15,7 +15,10 @@ class Generator
 public:
     Generator();
     std::vector<std::shared_ptr<LShapeNode>> readFile(std::string fileName, glm::vec3 initAngle, glm::vec3 initLoc, glm::vec3 initSize);
+    std::vector<std::shared_ptr<LShapeNode>> readFile(QString fileName, glm::vec3 initAngle, glm::vec3 initLoc, glm::vec3 initSize);
     std::vector<std::shared_ptr<LShapeNode>> m_shapeNodes;
+    std::vector<std::shared_ptr<LShapeNode>> generateTrees(std::string fileName, glm::vec3 initAngle, glm::vec3 initLoc, glm::vec3 initSize);
+
 
 private:
     std::shared_ptr<LRuleLine> processRule(std::string line, LRule *lineRule);

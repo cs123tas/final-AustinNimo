@@ -31,12 +31,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QGridLayout *gridLayout = new QGridLayout(ui->canvas3D);
     m_canvas3D = new SupportCanvas3D(qglFormat, this);
     gridLayout->addWidget(m_canvas3D, 0, 1);
-    QGridLayout *glgridLayout = new QGridLayout(ui->widget);
-//    m_glWidget = new GLWidget(qglFormat, this);
-//    m_glWidget->setMinimumSize(100, 100);
-//    glgridLayout->addWidget(m_glWidget, 0, 1);
-
-    ui->tabWidget->setCurrentWidget(ui->tab3D);
 
     // Restore the UI settings
     QSettings qtSettings("CS123", "CS123");
@@ -62,13 +56,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     dataBind();
 
-    QWidget *widget = ui->tabWidget->currentWidget();
-    ui->tabWidget->setCurrentWidget(ui->tab3D);
-    show();
-    ui->tabWidget->setCurrentWidget(widget);
+//    QWidget *widget = ui->tabWidget->currentWidget();
+//    ui->tabWidget->setCurrentWidget(ui->tab3D);
+//    show();
+//    ui->tabWidget->setCurrentWidget(widget);
     show();
     // Connect button signal to appropriate slot
      connect(ui->loadLSystemFileButton, &QPushButton::released, this, &MainWindow::loadLSystemFileButton);
+     connect(ui->clearSystemButton, &QPushButton::released, this, &MainWindow::clearSystemButton);
 
 }
 
@@ -81,15 +76,92 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+std::vector<float> parseFloats(std::string s) {
+    std::vector<float> vect;
+
+    std::stringstream ss(s);
+
+    float i;
+
+    while (ss >> i)
+    {
+
+
+        vect.push_back(i);
+        if (ss.peek() == ',' || ss.peek() == '\n'  || ss.peek() == ' ') {
+            ss.ignore();
+        }
+    }
+    return vect;
+}
+
+std::vector<glm::vec3> parseVecs(std::vector<float> nums) {
+    std::vector<glm::vec3> returnVec;
+    for (int i = 0; i < (int)nums.size(); i = i + 3) {
+        glm::vec3 newVec = glm::vec3(nums[i], nums[i+1], nums[i+2]);
+        returnVec.push_back(newVec);
+    }
+    return returnVec;
+}
+
 void MainWindow::loadLSystemFileButton() {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                     DEFAULT_FOLDER,
                                                     tr("Text files (*.txt)"));
     if (fileName != "") {
-        Generator systemGen;
-//        systemGen.readFile(fileName.toLocal8Bit().data(), {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, {1.0,1.0,1.0});
-        m_canvas3D->m_lScene.get()->m_sceneObjects = systemGen.readFile(fileName.toLocal8Bit().data(), {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, {1.0,1.0,1.0});
+
+        std::vector<float> locations = parseFloats(
+                    ui->treeLocs->toPlainText().toUtf8().constData());
+        std::vector<float> angles = parseFloats(
+                    ui->treeAngles->toPlainText().toUtf8().constData());
+        std::vector<float> sizes = parseFloats(
+                    ui->treeSizes->toPlainText().toUtf8().constData());
+
+        if (locations.size() == angles.size() && locations.size() % 3 == 0 && sizes.size() == 3) {
+            std::vector<glm::vec3> locationVec = parseVecs(locations);
+            std::vector<glm::vec3> angleVec = parseVecs(angles);
+            glm::vec3 sizeVec = parseVecs(sizes)[0];
+
+            generateTrees(std::string(fileName.toUtf8().data()), locationVec, angleVec, sizeVec);
+
+        }
     }
+}
+
+
+
+void MainWindow::clearSystemButton() {
+    clearTrees();
+}
+
+void MainWindow::generateTrees(QString fileName,
+                               std::vector<glm::vec3> treeLocations,
+                               std::vector<glm::vec3> treeAngles,
+                               glm::vec3 treeSize) {
+    Generator systemGen;
+
+    TreeDistribution newTrees;
+    newTrees.treeNodes = systemGen.readFile(fileName, {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, treeSize);
+    newTrees.treeAngles = treeAngles;
+    newTrees.treeLocations = treeLocations;
+    m_canvas3D->m_lScene.get()->m_sceneObjects.push_back(newTrees);
+}
+
+void MainWindow::generateTrees(std::string fileName,
+                               std::vector<glm::vec3> treeLocations,
+                               std::vector<glm::vec3> treeAngles,
+                               glm::vec3 treeSize) {
+    Generator systemGen;
+
+    TreeDistribution newTrees;
+    newTrees.treeNodes = systemGen.readFile(fileName, {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, treeSize);
+    newTrees.treeAngles = treeAngles;
+    newTrees.treeLocations = treeLocations;
+    m_canvas3D->m_lScene.get()->m_sceneObjects.push_back(newTrees);
+}
+
+void MainWindow::clearTrees() {
+    m_canvas3D->m_lScene.get()->m_sceneObjects.clear();
 }
 
 void MainWindow::dataBind() {
@@ -107,8 +179,6 @@ void MainWindow::dataBind() {
     m_buttonGroups.push_back(filterButtonGroup);
 
     BIND(BoolBinding::bindCheckbox(ui->useLightingCheckbox, settings.useLighting))
-
-    BIND(ChoiceBinding::bindTabs(ui->tabWidget, settings.currentTab))
 
 #undef BIND
 }
@@ -151,7 +221,6 @@ void MainWindow::fileOpen() {
     // This opens the 3D tab to initialize OGL so parsing
     // the scene doesn't crash. If you can find a better solution
     // feel free to change this.
-    activateCanvas3D();
     QString file = QFileDialog::getOpenFileName(this, QString(), "/course/cs123/data/");
     if (!file.isNull()) {
         if (file.endsWith(".xml")) {
@@ -171,7 +240,6 @@ void MainWindow::fileOpen() {
                     cam->setHeightAngle(camera.heightAngle);
                 }
 
-                activateCanvas3D();
             } else {
                 QMessageBox::critical(this, "Error", "Could not load scene \"" + file + "\"");
             }
@@ -202,10 +270,6 @@ void MainWindow::setAllEnabled(bool enabled) {
         widget->setEnabled(enabled);
     foreach (QAction *action, actions)
         action->setEnabled(enabled);
-}
-
-void MainWindow::activateCanvas3D() {
-    ui->tabWidget->setCurrentWidget(ui->tab3D);
 }
 
 void MainWindow::setCameraAxisX() {

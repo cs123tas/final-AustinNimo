@@ -26,6 +26,17 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void generateTrees(QString fileName,
+                                   std::vector<glm::vec3> treeLocations,
+                                   std::vector<glm::vec3> treeAngles,
+                                   glm::vec3 treeSize);
+
+    void generateTrees(std::string fileName,
+                                   std::vector<glm::vec3> treeLocations,
+                                   std::vector<glm::vec3> treeAngles,
+                                   glm::vec3 treeSize);
+    void clearTrees();
+
 protected:
 
     // Overridden from QWidget. Handles the window resize event.
@@ -69,9 +80,6 @@ public slots:
     // Displays a dialog box to open a 2D image or 3D scene file.
     void fileOpen();
 
-    // Sets the current tab on the UI to the 3D canvas view.
-    void activateCanvas3D();
-
     // These methods are update different aspects of the 3D camera, and delegate to the Canvas3D.
     void setCameraAxisX();
     void setCameraAxisY();
@@ -85,6 +93,7 @@ public slots:
     void updateCameraHeightAngle();
     void setCameraAxonometric();
     void loadLSystemFileButton();
+    void clearSystemButton();
 };
 
 #endif // MAINWINDOW_H

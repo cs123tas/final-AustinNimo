@@ -12,6 +12,7 @@ out vec2 texc;
 uniform mat4 p;
 uniform mat4 v;
 uniform mat4 m;
+uniform mat4 m2;
 
 // Light data
 const int MAX_LIGHTS = 10;
@@ -34,11 +35,11 @@ void main()
 {
     texc = texCoord;
 
-    vec4 position_cameraSpace = v * m * vec4(position, 1.0);
-    vec4 normal_cameraSpace = vec4(normalize(mat3(transpose(inverse(v * m))) * normal), 0);
+    vec4 position_cameraSpace = v * m2 * m * vec4(position, 1.0);
+    vec4 normal_cameraSpace = vec4(normalize(mat3(transpose(inverse(v * m2 * m))) * normal), 0);
 
-    vec4 position_worldSpace = m * vec4(position, 1.0);
-    vec4 normal_worldSpace = vec4(normalize(mat3(transpose(inverse(m))) * normal), 0);
+    vec4 position_worldSpace = m2 * m * vec4(position, 1.0);
+    vec4 normal_worldSpace = vec4(normalize(mat3(transpose(inverse(m2 * m))) * normal), 0);
 
     if (useArrowOffsets)
     {

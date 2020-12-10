@@ -11,6 +11,7 @@
 #include <memory>
 #include <regex>
 #include "l-systems/lnode.h"
+#include <QString>
 
 
 // TODO make this work
@@ -27,12 +28,14 @@ public:
     static bool fGT(float x, float y);
     static float clip(float n, float lower, float upper);
     static std::string get_file_contents(const char *filename);
+    static std::string get_file_contents(QString filename);
     static std::vector<std::string> splitRegex(std::string s, std::regex r);
     static std::vector<std::string> splitMatchesRegex(std::string s, std::regex r);
 //    static std::string parseParen(std::string s, LRule *lineRule);
     static float parseIntoFloat(std::string s, std::unordered_map<std::string, float> variables);
     static float shuntingYard(std::string s);
     static float random(float a, float b);
+
 
 
 

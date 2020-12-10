@@ -4,6 +4,9 @@
 #include <fstream>
 #include <cerrno>
 #include "shunting-yard.cpp"
+#include <QString>
+#include <QFile>
+#include <QTextStream>
 SupportMethods::SupportMethods()
 {
 
@@ -64,6 +67,20 @@ std::string SupportMethods::get_file_contents(const char *filename)
     return returnString;
   }
   throw(errno);
+}
+
+std::string SupportMethods::get_file_contents(QString filename)
+{
+
+    QFile inputFile(filename);
+    if (inputFile.open(QIODevice::ReadOnly)) {
+        QTextStream in(&inputFile);
+        QString qLine = in.readAll();
+        std::string returnString = qLine.toUtf8().constData();
+        returnString.erase(remove(returnString.begin(), returnString.end(), ' '), returnString.end());
+        return returnString;
+    }
+    throw(errno);
 }
 
 
@@ -149,6 +166,7 @@ std::vector<std::string> SupportMethods::splitMatchesRegex(std::string s, std::r
   while (regex_search(s, m, r))  // <-- use it here to get the match
   {
     int split_on = m.position(); // <-- use the match position
+    int length = m.length();
     splits.push_back(s.substr(0, split_on + m.length()));
     s = s.substr(split_on + m.length());
   }
