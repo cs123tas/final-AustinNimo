@@ -27,7 +27,7 @@ Generator::Generator()
     // Start the calculator parser
     cparse_startup();
     // Determine best cylinder parameters
-    m_cylinder = std::make_shared<Cylinder>(20, 20);
+    m_cylinder = std::make_shared<Cylinder>(4, 4);
 
     // Load in leaf
     QString leafFile(":/obj/l-systems/leaf.obj");
@@ -70,6 +70,7 @@ struct Layer : public QRunnable
     glm::vec3 lastAngle;
     glm::vec3 curLocation;
     glm::vec3 curScale;
+    glm::vec3 leafScale;
     std::unordered_map<std::string, float> variables;
     int depth;
     std::vector<std::shared_ptr<LShapeNode>> &nodes;
@@ -78,10 +79,10 @@ struct Layer : public QRunnable
     QMutex *mutex;
 
     Layer(std::string rule, std::unordered_map<std::string, LRule> &rules,
-          glm::vec3 curAngle, glm::vec3 lastAngle, glm::vec3 curLocation, glm::vec3 curScale,
+          glm::vec3 curAngle, glm::vec3 lastAngle, glm::vec3 curLocation, glm::vec3 curScale, glm::vec3 &leafScale,
           std::unordered_map<std::string, float> &variables, int depth, std::vector<std::shared_ptr<LShapeNode>> &nodes, std::shared_ptr<Cylinder> m_cylinder,
           std::shared_ptr<LoadedMesh> m_leaf, QMutex *mutex) : rule(rule), rules(rules), curAngle(curAngle),
-            lastAngle(lastAngle), curLocation(curLocation), curScale(curScale), variables(variables), depth(depth),
+            lastAngle(lastAngle), curLocation(curLocation), curScale(curScale), leafScale(leafScale), variables(variables), depth(depth),
               nodes(nodes), m_cylinder(m_cylinder), m_leaf(m_leaf), mutex(mutex){}
     std::vector<LLayer> finalLayer;
     void run() override final
@@ -184,6 +185,7 @@ struct Layer : public QRunnable
                     float thickness = SupportMethods::parseIntoFloat(line.get()->thickness, variables);
                     float width = SupportMethods::parseIntoFloat(line.get()->width, variables);
                     glm::vec3 scale = {length, thickness, width};
+                    scale = scale * leafScale;
 
                     // Paint the shape by using the current scale, applying the current rotation, and then translating
                     std::shared_ptr<LShapeNode> newNode = std::make_shared<LShapeNode>();
@@ -218,7 +220,7 @@ struct Layer : public QRunnable
                         newVariables[std::string(1,pred.get()->rule[0])] = newVariableValue;
 
                         Layer *root = new Layer(pred.get()->pred, rules, newLayer.angle, newLayer.lastAngle, newLayer.location,
-                                                newLayer.scale, newVariables, newVariableValue, nodes, m_cylinder, m_leaf, mutex);
+                                                newLayer.scale, leafScale, newVariables, newVariableValue, nodes, m_cylinder, m_leaf, mutex);
                         QThreadPool::globalInstance()->start(root);
                         //generateLayer(pred.get()->pred, rules, newLayer.angle, newLayer.lastAngle, newLayer.location, newLayer.scale, newVariables, newVariableValue);
                     }
@@ -244,7 +246,7 @@ void Generator::generateLayers(std::unordered_map<std::string, LRule> &rules,
 
     //generateLayer("L", rules, initAngle, initAngle, initLoc, initSize, initVariables, 0);
     QMutex mutex;
-    Layer *root = new Layer("L", rules, initAngle, initAngle, initLoc, initSize, initVariables, 0, m_shapeNodes, m_cylinder, m_leaf, &mutex);
+    Layer *root = new Layer("L", rules, initAngle, initAngle, initLoc, initSize, initSize, initVariables, 0, m_shapeNodes, m_cylinder, m_leaf, &mutex);
     QThreadPool::globalInstance()->start(root);
     QThreadPool::globalInstance()->waitForDone();
 }

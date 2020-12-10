@@ -88,6 +88,7 @@ public slots:
     void updateCameraHeightAngle();
     void setCameraAxonometric();
     void loadLSystemFileButton();
+    void clearSystemButton();
 };
 
 #endif // MAINWINDOW_H

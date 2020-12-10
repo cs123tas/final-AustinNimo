@@ -63,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
     show();
     // Connect button signal to appropriate slot
      connect(ui->loadLSystemFileButton, &QPushButton::released, this, &MainWindow::loadLSystemFileButton);
+     connect(ui->clearSystemButton, &QPushButton::released, this, &MainWindow::clearSystemButton);
 
 }
 
@@ -75,16 +76,62 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+std::vector<float> parseFloats(std::string s) {
+    std::vector<float> vect;
+
+    std::stringstream ss(s);
+
+    float i;
+
+    while (ss >> i)
+    {
+
+
+        vect.push_back(i);
+        if (ss.peek() == ',' || ss.peek() == '\n'  || ss.peek() == ' ') {
+            ss.ignore();
+        }
+    }
+    return vect;
+}
+
+std::vector<glm::vec3> parseVecs(std::vector<float> nums) {
+    std::vector<glm::vec3> returnVec;
+    for (int i = 0; i < (int)nums.size(); i = i + 3) {
+        glm::vec3 newVec = glm::vec3(nums[i], nums[i+1], nums[i+2]);
+        returnVec.push_back(newVec);
+    }
+    return returnVec;
+}
+
 void MainWindow::loadLSystemFileButton() {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                     DEFAULT_FOLDER,
                                                     tr("Text files (*.txt)"));
     if (fileName != "") {
-        generateTrees(fileName,
-                      {{10.0,0.0,0.0},{-10.0,0.0,0.0}},
-                      {{1.0,0.0,0.0},{-1.0,0.0,0.0}},
-                      {.5,.5,.5});
+
+        std::vector<float> locations = parseFloats(
+                    ui->treeLocs->toPlainText().toUtf8().constData());
+        std::vector<float> angles = parseFloats(
+                    ui->treeAngles->toPlainText().toUtf8().constData());
+        std::vector<float> sizes = parseFloats(
+                    ui->treeSizes->toPlainText().toUtf8().constData());
+
+        if (locations.size() == angles.size() && locations.size() % 3 == 0 && sizes.size() == 3) {
+            std::vector<glm::vec3> locationVec = parseVecs(locations);
+            std::vector<glm::vec3> angleVec = parseVecs(angles);
+            glm::vec3 sizeVec = parseVecs(sizes)[0];
+
+            generateTrees(fileName, locationVec, angleVec, sizeVec);
+
+        }
     }
+}
+
+
+
+void MainWindow::clearSystemButton() {
+    clearTrees();
 }
 
 void MainWindow::generateTrees(QString fileName,
