@@ -16,6 +16,11 @@
 #include "gl/GLDebug.h"
 #include "lib/CS123XmlSceneParser.h"
 #include "lib/Vertex.h"
+#include "lib/FileResourceLoader.h"
+#include "gl/shaders/Shader.h"
+#include "gl/terrain.h"
+
+#define PI 3.14159265f
 
 SupportCanvas3D::SupportCanvas3D(QGLFormat format, QWidget *parent) : QGLWidget(format, parent),
     m_isDragging(false),
@@ -69,6 +74,13 @@ void SupportCanvas3D::initializeGL() {
 
     settingsChanged();
 
+    m_model = glm::mat4(1.f);
+
+    std::string vertexSource = FileResourceLoader::loadResourceFileToString(":/shaders/terrain.vert");
+    std::string fragmentSource = FileResourceLoader::loadResourceFileToString(":/shaders/terrain.frag");
+    m_shader = std::make_unique<CS123Shader>(vertexSource, fragmentSource);
+    m_terrain.init();
+
 }
 
 void SupportCanvas3D::initializeGlew() {
@@ -118,6 +130,31 @@ void SupportCanvas3D::paintGL() {
     glViewport(0, 0, width() * ratio, height() * ratio);
     getCamera()->setAspectRatio(static_cast<float>(width()) / static_cast<float>(height()));
     m_currentScene->render(this);
+
+//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+    // Bind shader program.
+    //glUseProgram(m_program);
+
+    m_shader->bind();
+
+    // Set uniforms.
+//    glUniformMatrix4fv(glGetUniformLocation(m_program, "model"), 1, GL_FALSE, glm::value_ptr(m_model));
+//    glUniformMatrix4fv(glGetUniformLocation(m_program, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
+//    glUniformMatrix4fv(glGetUniformLocation(m_program, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
+
+    m_shader->setUniform("model", m_model);
+    m_shader->setUniform("view", getCamera()->getViewMatrix());
+    m_shader->setUniform("projection", getCamera()->getProjectionMatrix());
+
+    // Draw terrain.
+    m_terrain.draw();
+
+    // Unbind shader program.
+    //glUseProgram(0);
+    m_shader->unbind();
 }
 
 void SupportCanvas3D::settingsChanged() {

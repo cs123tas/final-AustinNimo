@@ -14,6 +14,8 @@
 #include <QRunnable>
 #include <QThreadPool>
 #include <QMutex>
+#include "lib/cparse/shunting-yard.h"
+#include "lib/cparse/builtin-features.inc"
 
 int GENERATION_DEPTH = 3;
 //TODO Allow editing the trunk color
@@ -22,6 +24,8 @@ glm::vec4 LEAF_GREEN(0.227,0.372,0.043,1.0);
 
 Generator::Generator()
 {
+    // Start the calculator parser
+    cparse_startup();
     // Determine best cylinder parameters
     m_cylinder = std::make_shared<Cylinder>(20, 20);
 
@@ -570,27 +574,6 @@ std::shared_ptr<LPredRuleLine> Generator::processPredRule(std::string line, LRul
     returnRule.get()->rule = line.substr(0, line.size() - 1);
     return returnRule;
 
-}
-
-// Read each line in and forward it to the appropriate method
-void Generator::readLine(std::string line) {
-    std::vector<std::string> pieces = SupportMethods::split(line, ":");
-    lineType lineRule = lineMap[pieces[0]];
-    switch(lineRule) {
-        case lineType::FWD:
-            break;
-
-        case lineType::ROT:
-            break;
-
-        case lineType::LEAF:
-            break;
-
-        case lineType::PRED:
-            break;
-    }
-
-    std::cout << pieces[0] << std::endl;
 }
 
 //void Generator::generateProduction(std::string predecessor) {

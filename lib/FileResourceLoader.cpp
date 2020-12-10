@@ -1,9 +1,9 @@
-#include "ResourceLoader.h"
+#include "FileResourceLoader.h"
 #include <QFile>
 #include <QString>
 #include <QTextStream>
 
-std::string ResourceLoader::loadResourceFileToString(const std::string &resourcePath)
+std::string FileResourceLoader::loadResourceFileToString(const std::string &resourcePath)
 {
     QString vertFilePath = QString::fromStdString(resourcePath);
     QFile vertFile(vertFilePath);

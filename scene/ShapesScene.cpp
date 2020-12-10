@@ -18,7 +18,7 @@ using namespace CS123::GL;
 #include "gl/shaders/CS123Shader.h"
 #include "gl/shaders/Shader.h"
 
-#include "lib/ResourceLoader.h"
+#include "lib/FileResourceLoader.h"
 
 ShapesScene::ShapesScene(int width, int height) :
     m_meshVertices(),
@@ -59,8 +59,8 @@ void ShapesScene::initializeSceneLight() {
 }
 
 void ShapesScene::loadPhongShader() {
-    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/default.vert");
-    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/default.frag");
+    std::string vertexSource = FileResourceLoader::loadResourceFileToString(":/shaders/default.vert");
+    std::string fragmentSource = FileResourceLoader::loadResourceFileToString(":/shaders/default.frag");
     m_phongShader = std::make_unique<CS123Shader>(vertexSource, fragmentSource);
 }
 

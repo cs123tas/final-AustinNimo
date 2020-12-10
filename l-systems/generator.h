@@ -18,9 +18,6 @@ public:
     std::vector<std::shared_ptr<LShapeNode>> m_shapeNodes;
 
 private:
-//    int readRotationLine(std::vector<std::string> line);
-    void readLine(std::string line);
-//    void generateProduction(std::string predecessor);
     std::shared_ptr<LRuleLine> processRule(std::string line, LRule *lineRule);
     std::shared_ptr<LFwdRuleLine> processFwdRule(std::string line, LRule *lineRule);
     std::shared_ptr<LRotRuleLine> processRotRule(std::string line, LRule *lineRule);

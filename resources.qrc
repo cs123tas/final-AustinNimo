@@ -2,6 +2,8 @@
     <qresource prefix="/shaders">
         <file alias="default.frag">shaders/shader.frag</file>
         <file alias="default.vert">shaders/shader.vert</file>
+        <file alias="terrain.frag">shaders/terrainshader.frag</file>
+        <file alias="terrain.vert">shaders/terrainshader.vert</file>
     </qresource>
     <qresource prefix="/obj">
         <file>l-systems/leaf.obj</file>

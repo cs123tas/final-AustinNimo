@@ -1,5 +1,5 @@
-#ifndef RESOURCELOADER_H
-#define RESOURCELOADER_H
+#ifndef FILERESOURCELOADER_H
+#define FILERESOURCELOADER_H
 
 #include <exception>
 #include <string>
@@ -20,10 +20,10 @@ private:
 
 }
 
-class ResourceLoader
+class FileResourceLoader
 {
 public:
     static std::string loadResourceFileToString(const std::string &resourcePath);
 };
 
-#endif // RESOURCELOADER_H
+#endif // FILERESOURCELOADER_H

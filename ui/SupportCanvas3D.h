@@ -9,6 +9,8 @@
 #include "glm/glm.hpp"
 #include "lib/Vertex.h"
 #include "scene/LScene.h"
+#include "gl/terrain.h"
+#include "gl/shaders/CS123Shader.h"
 
 class RGBA;
 class Camera;
@@ -111,6 +113,10 @@ private:
 
     bool m_settingsDirty;
 
+    std::unique_ptr<CS123::GL::CS123Shader> m_shader;
+
+    Terrain m_terrain;
+    glm::mat4 m_model;
     std::unique_ptr<CamtransCamera> m_defaultPerspectiveCamera;
     std::unique_ptr<OrbitingCamera> m_defaultOrbitingCamera;
     OpenGLScene *m_currentScene;

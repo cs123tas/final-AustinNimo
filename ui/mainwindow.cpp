@@ -27,9 +27,15 @@ MainWindow::MainWindow(QWidget *parent) :
     qglFormat.setProfile(QGLFormat::CoreProfile);
     qglFormat.setSampleBuffers(true);
     ui->setupUi(this);
+
     QGridLayout *gridLayout = new QGridLayout(ui->canvas3D);
     m_canvas3D = new SupportCanvas3D(qglFormat, this);
     gridLayout->addWidget(m_canvas3D, 0, 1);
+    QGridLayout *glgridLayout = new QGridLayout(ui->widget);
+//    m_glWidget = new GLWidget(qglFormat, this);
+//    m_glWidget->setMinimumSize(100, 100);
+//    glgridLayout->addWidget(m_glWidget, 0, 1);
+
     ui->tabWidget->setCurrentWidget(ui->tab3D);
 
     // Restore the UI settings
@@ -105,9 +111,6 @@ void MainWindow::dataBind() {
     BIND(ChoiceBinding::bindTabs(ui->tabWidget, settings.currentTab))
 
 #undef BIND
-
-    // make sure the aspect ratio updates when m_canvas3D changes size
-    connect(m_canvas3D, SIGNAL(aspectRatioChanged()), this, SLOT(updateAspectRatio()));
 }
 
 void MainWindow::changeEvent(QEvent *e) {
