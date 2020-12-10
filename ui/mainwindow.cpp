@@ -81,8 +81,12 @@ void MainWindow::loadLSystemFileButton() {
                                                     tr("Text files (*.txt)"));
     if (fileName != "") {
         Generator systemGen;
-//        systemGen.readFile(fileName.toLocal8Bit().data(), {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, {1.0,1.0,1.0});
-        m_canvas3D->m_lScene.get()->m_sceneObjects = systemGen.readFile(fileName.toLocal8Bit().data(), {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, {1.0,1.0,1.0});
+
+        TreeDistribution newTrees;
+        newTrees.treeNodes = systemGen.readFile(fileName.toLocal8Bit().data(), {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, {1.0,1.0,1.0});
+        newTrees.treeAngles = {{1.0,0.0,0.0},{-1.0,0.0,0.0}};
+        newTrees.treeLocations = {{10.0,0.0,0.0},{-10.0,0.0,0.0}};
+        m_canvas3D->m_lScene.get()->m_sceneObjects.push_back(newTrees);
     }
 }
 

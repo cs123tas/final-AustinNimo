@@ -41,7 +41,7 @@ public:
     // pointer.  This will be used during the "modeler" lab, so don't worry about it for now.
     void setSelection(int x, int y);
     // The objects in the scene
-    std::vector<std::shared_ptr<LShapeNode>> m_sceneObjects;
+    std::vector<TreeDistribution> m_sceneObjects;
 
 private:
 

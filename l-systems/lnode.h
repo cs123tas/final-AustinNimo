@@ -129,6 +129,12 @@ struct ParseNode {
     ParseNode *parentNode;
 };
 
+struct TreeDistribution {
+    std::vector<std::shared_ptr<LShapeNode>> treeNodes;
+    std::vector<glm::vec3> treeLocations;
+    std::vector<glm::vec3> treeAngles;
+};
+
 #endif // LNODE_H
 
 
