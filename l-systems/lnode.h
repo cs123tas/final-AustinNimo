@@ -133,6 +133,7 @@ struct TreeDistribution {
     std::vector<std::shared_ptr<LShapeNode>> treeNodes;
     std::vector<glm::vec3> treeLocations;
     std::vector<glm::vec3> treeAngles;
+    std::vector<glm::mat4x4> treeModels;
 };
 
 #endif // LNODE_H

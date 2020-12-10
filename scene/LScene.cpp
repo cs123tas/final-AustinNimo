@@ -12,7 +12,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <sstream>
-
+#include <QRunnable>
 
 using namespace CS123::GL;
 
@@ -100,29 +100,18 @@ void LScene::renderGeometry() {
     //
 
     // TODO ALlow materials to switch as part of the created object
-    glm::mat4x4 model;
-
-    glm::vec3 targetVec;
-    glm::quat rotQuat;
-    glm::mat4 rotationMatrix;
-    model = model * rotationMatrix;
 
     for (int i = 0; i < (int)m_sceneObjects.size(); i++) {
         TreeDistribution treeSet = m_sceneObjects[i];
-        for(int j = 0; j < (int) treeSet.treeLocations.size(); j++) {
-            model = glm::translate(glm::mat4(), treeSet.treeLocations[j]);
-            targetVec = treeSet.treeAngles[j];
-            rotQuat = glm::rotation({0.0,1.0,0.0}, targetVec);
-            rotationMatrix = glm::toMat4(rotQuat);
-            model = model * rotationMatrix;
 
-            for (int k = 0; k < (int)treeSet.treeNodes.size(); k++) {
-                CS123SceneMaterial objectMaterial = CS123SceneMaterial();
-                objectMaterial.cAmbient = treeSet.treeNodes[k].get()->color;
-                objectMaterial.cDiffuse = treeSet.treeNodes[k].get()->color;
-                m_phongShader->applyMaterial(objectMaterial);
-                m_phongShader->setUniform("m", treeSet.treeNodes[k]->transform);
-                m_phongShader->setUniform("m2", model);
+        for (int k = 0; k < (int)treeSet.treeNodes.size(); k++) {
+            CS123SceneMaterial objectMaterial = CS123SceneMaterial();
+            objectMaterial.cAmbient = treeSet.treeNodes[k].get()->color;
+            objectMaterial.cDiffuse = treeSet.treeNodes[k].get()->color;
+            m_phongShader->applyMaterial(objectMaterial);
+            m_phongShader->setUniform("m", treeSet.treeNodes[k]->transform);
+            for(int j = 0; j < (int) treeSet.treeLocations.size(); j++) {
+                m_phongShader->setUniform("m2", treeSet.treeModels[j]);
 
                 // TODO Add textures back if there's time
         //        m_phongShader->applyTexture(m_sceneObjects[i]->primitive.material.textureMap);
