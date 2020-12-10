@@ -12,6 +12,8 @@
 #include "shapes/MeshLoader.h"
 #include "lib/Vertex.h"
 #include "l-systems/generator.h"
+#include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 const QString DEFAULT_FOLDER = "D:\\Nodal\\Documents\\GitHub\\final-AustinNimo\\l-systems";
 
@@ -144,6 +146,19 @@ void MainWindow::generateTrees(QString fileName,
     newTrees.treeNodes = systemGen.readFile(fileName, {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, treeSize);
     newTrees.treeAngles = treeAngles;
     newTrees.treeLocations = treeLocations;
+
+    glm::mat4x4 model;
+    glm::vec3 targetVec;
+    glm::quat rotQuat;
+    glm::mat4 rotationMatrix;
+    for(int i = 0; i < (int) newTrees.treeLocations.size(); i++) {
+        model = glm::translate(glm::mat4(), newTrees.treeLocations[i]);
+        targetVec = newTrees.treeAngles[i];
+        rotQuat = glm::rotation({0.0,1.0,0.0}, targetVec);
+        rotationMatrix = glm::toMat4(rotQuat);
+        model = model * rotationMatrix;
+        newTrees.treeModels.push_back(model);
+    }
     m_canvas3D->m_lScene.get()->m_sceneObjects.push_back(newTrees);
 }
 
@@ -157,6 +172,19 @@ void MainWindow::generateTrees(std::string fileName,
     newTrees.treeNodes = systemGen.readFile(fileName, {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, treeSize);
     newTrees.treeAngles = treeAngles;
     newTrees.treeLocations = treeLocations;
+
+    glm::mat4x4 model;
+    glm::vec3 targetVec;
+    glm::quat rotQuat;
+    glm::mat4 rotationMatrix;
+    for(int i = 0; i < (int) newTrees.treeLocations.size(); i++) {
+        model = glm::translate(glm::mat4(), newTrees.treeLocations[i]);
+        targetVec = newTrees.treeAngles[i];
+        rotQuat = glm::rotation({0.0,1.0,0.0}, targetVec);
+        rotationMatrix = glm::toMat4(rotQuat);
+        model = model * rotationMatrix;
+        newTrees.treeModels.push_back(model);
+    }
     m_canvas3D->m_lScene.get()->m_sceneObjects.push_back(newTrees);
 }
 
