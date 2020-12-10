@@ -80,14 +80,28 @@ void MainWindow::loadLSystemFileButton() {
                                                     DEFAULT_FOLDER,
                                                     tr("Text files (*.txt)"));
     if (fileName != "") {
-        Generator systemGen;
-
-        TreeDistribution newTrees;
-        newTrees.treeNodes = systemGen.readFile(fileName.toLocal8Bit().data(), {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, {1.0,1.0,1.0});
-        newTrees.treeAngles = {{1.0,0.0,0.0},{-1.0,0.0,0.0}};
-        newTrees.treeLocations = {{10.0,0.0,0.0},{-10.0,0.0,0.0}};
-        m_canvas3D->m_lScene.get()->m_sceneObjects.push_back(newTrees);
+        generateTrees(fileName,
+                      {{10.0,0.0,0.0},{-10.0,0.0,0.0}},
+                      {{1.0,0.0,0.0},{-1.0,0.0,0.0}},
+                      {.5,.5,.5});
     }
+}
+
+void MainWindow::generateTrees(QString fileName,
+                               std::vector<glm::vec3> treeLocations,
+                               std::vector<glm::vec3> treeAngles,
+                               glm::vec3 treeSize) {
+    Generator systemGen;
+
+    TreeDistribution newTrees;
+    newTrees.treeNodes = systemGen.readFile(fileName.toLocal8Bit().data(), {0.0, 1.0, 0.0}, {0.0,0.0,0.0}, treeSize);
+    newTrees.treeAngles = treeAngles;
+    newTrees.treeLocations = treeLocations;
+    m_canvas3D->m_lScene.get()->m_sceneObjects.push_back(newTrees);
+}
+
+void MainWindow::clearTrees() {
+    m_canvas3D->m_lScene.get()->m_sceneObjects.clear();
 }
 
 void MainWindow::dataBind() {

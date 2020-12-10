@@ -26,6 +26,12 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void generateTrees(QString fileName,
+                                   std::vector<glm::vec3> treeLocations,
+                                   std::vector<glm::vec3> treeAngles,
+                                   glm::vec3 treeSize);
+    void clearTrees();
+
 protected:
 
     // Overridden from QWidget. Handles the window resize event.
