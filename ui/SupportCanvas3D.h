@@ -45,7 +45,6 @@ public:
     OpenGLScene *getScene() { return m_currentScene; }
 
     void loadSceneviewSceneFromParser(CS123XmlSceneParser &parser);
-
     // Copies pixels from the OpenGL render buffer into a standard bitmap image, using row-major
     // order and RGBA data format.
     void copyPixels(int width, int height, RGBA *data);
@@ -70,7 +69,6 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent *event) override;
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
     virtual void wheelEvent(QWheelEvent *event) override;
-    virtual void resizeEvent(QResizeEvent *event) override;
 
     float m_oldPosX, m_oldPosY, m_oldPosZ;
     float m_oldRotU, m_oldRotV, m_oldRotN;
@@ -91,8 +89,10 @@ private:
 
     bool m_settingsDirty;
 
+    void initializeGLFragmentShaders();
     std::unique_ptr<CS123::GL::CS123Shader> m_shader;
 
+    GLuint m_textureID;
     glm::mat4 m_model;
     std::unique_ptr<OrbitingCamera> m_defaultOrbitingCamera;
     OpenGLScene *m_currentScene;
