@@ -15,10 +15,7 @@
 class RGBA;
 class Camera;
 class OpenGLScene;
-class ShapesScene;
-class SceneviewScene;
 class OrbitingCamera;
-class CamtransCamera;
 class CS123XmlSceneParser;
 
 /**
@@ -43,14 +40,11 @@ public:
 
     Camera *getCamera();
     OrbitingCamera *getOrbitingCamera();
-    CamtransCamera *getCamtransCamera();
 
     // Returns a pointer to the current scene. If no scene is loaded, this function returns nullptr.
     OpenGLScene *getScene() { return m_currentScene; }
 
     void loadSceneviewSceneFromParser(CS123XmlSceneParser &parser);
-    void switchToSceneviewScene();
-    void switchToShapesScene();
 
     // Copies pixels from the OpenGL render buffer into a standard bitmap image, using row-major
     // order and RGBA data format.
@@ -62,23 +56,6 @@ public:
     Terrain m_terrain;
 
 public slots:
-    // These will be called by the corresponding UI buttons on the Camtrans dock
-    void resetUpVector();
-    void setCameraAxisX();
-    void setCameraAxisY();
-    void setCameraAxisZ();
-    void setCameraAxonometric();
-
-    // These will be called whenever the corresponding UI elements are updated on the Camtrans dock
-    void updateCameraHeightAngle();
-    void updateCameraTranslation();
-    void updateCameraRotationU();
-    void updateCameraRotationV();
-    void updateCameraRotationN();
-    void updateCameraClip();
-
-    // This is called to load a mesh file
-    void loadMesh(std::vector<Vertex> vertices, std::vector<int> indices);
 
 signals:
     void aspectRatioChanged();
@@ -117,11 +94,8 @@ private:
     std::unique_ptr<CS123::GL::CS123Shader> m_shader;
 
     glm::mat4 m_model;
-    std::unique_ptr<CamtransCamera> m_defaultPerspectiveCamera;
     std::unique_ptr<OrbitingCamera> m_defaultOrbitingCamera;
     OpenGLScene *m_currentScene;
-    std::unique_ptr<ShapesScene> m_shapesScene;
-    std::unique_ptr<SceneviewScene> m_sceneviewScene;
 };
 
 #endif // SUPPORTCANVAS3D_H

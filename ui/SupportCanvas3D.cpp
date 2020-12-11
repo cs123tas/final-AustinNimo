@@ -6,11 +6,8 @@
 #include <QApplication>
 
 #include "lib/RGBA.h"
-#include "camera/CamtransCamera.h"
 #include "camera/OrbitingCamera.h"
-#include "scene/SceneviewScene.h"
 #include "Settings.h"
-#include "scene/ShapesScene.h"
 
 #include <iostream>
 #include "gl/GLDebug.h"
@@ -25,7 +22,6 @@
 SupportCanvas3D::SupportCanvas3D(QGLFormat format, QWidget *parent) : QGLWidget(format, parent),
     m_isDragging(false),
     m_settingsDirty(true),
-    m_defaultPerspectiveCamera(new CamtransCamera()),
     m_defaultOrbitingCamera(new OrbitingCamera()),
     m_currentScene(nullptr)
 {
@@ -37,8 +33,6 @@ SupportCanvas3D::~SupportCanvas3D()
 
 Camera *SupportCanvas3D::getCamera() {
     switch(settings.getCameraMode()) {
-        case CAMERAMODE_CAMTRANS:
-            return m_defaultPerspectiveCamera.get();
 
         case CAMERAMODE_ORBIT:
             return m_defaultOrbitingCamera.get();
@@ -50,11 +44,6 @@ Camera *SupportCanvas3D::getCamera() {
 
 OrbitingCamera *SupportCanvas3D::getOrbitingCamera() {
     return m_defaultOrbitingCamera.get();
-}
-
-
-CamtransCamera *SupportCanvas3D::getCamtransCamera() {
-    return m_defaultPerspectiveCamera.get();
 }
 
 void SupportCanvas3D::initializeGL() {
@@ -115,8 +104,6 @@ void SupportCanvas3D::initializeOpenGLSettings() {
 }
 
 void SupportCanvas3D::initializeScenes() {
-    m_sceneviewScene = std::make_unique<SceneviewScene>();
-    m_shapesScene = std::make_unique<ShapesScene>(width(), height());
     m_lScene = std::make_unique<LScene>();
 
 }
@@ -173,28 +160,8 @@ void SupportCanvas3D::setSceneFromSettings() {
         case SCENEMODE_SHAPES:
             setSceneToL();
             break;
-
-        case SCENEMODE_SCENEVIEW:
-            setSceneToSceneview();
-            break;
     }
     m_settingsDirty = false;
-}
-
-void SupportCanvas3D::loadSceneviewSceneFromParser(CS123XmlSceneParser &parser) {
-    m_sceneviewScene = std::make_unique<SceneviewScene>();
-    Scene::parse(m_sceneviewScene.get(), &parser);
-    m_settingsDirty = true;
-}
-
-void SupportCanvas3D::setSceneToSceneview() {
-    assert(m_sceneviewScene.get());
-    m_currentScene = m_sceneviewScene.get();
-}
-
-void SupportCanvas3D::setSceneToShapes() {
-    assert(m_shapesScene.get());
-    m_currentScene = m_shapesScene.get();
 }
 
 void SupportCanvas3D::setSceneToL() {
@@ -212,89 +179,6 @@ void SupportCanvas3D::copyPixels(int width, int height, RGBA *data) {
         for (int x = 0; x < width; x++)
             std::swap(data[x + y * width], data[x + (height - y - 1) * width]);
 }
-
-void SupportCanvas3D::resetUpVector() {
-    // Reset the up vector to the y axis
-    glm::vec4 up = glm::vec4(0.f, 1.f, 0.f, 0.f);
-    if (fabs(glm::length(m_defaultPerspectiveCamera->getUp() - up)) > 0.0001f) {
-        m_defaultPerspectiveCamera->orientLook(
-                    m_defaultPerspectiveCamera->getPosition(),
-                    m_defaultPerspectiveCamera->getLook(),
-                    up);
-        update();
-    }
-}
-
-
-void SupportCanvas3D::setCameraAxisX() {
-    m_defaultPerspectiveCamera->orientLook(
-                glm::vec4(2.f, 0.f, 0.f, 1.f),
-                glm::vec4(-1.f, 0.f, 0.f, 0.f),
-                glm::vec4(0.f, 1.f, 0.f, 0.f));
-    update();
-}
-
-void SupportCanvas3D::setCameraAxisY() {
-    m_defaultPerspectiveCamera->orientLook(
-                glm::vec4(0.f, 2.f, 0.f, 1.f),
-                glm::vec4(0.f, -1.f, 0.f, 0.f),
-                glm::vec4(0.f, 0.f, 1.f, 0.f));
-    update();
-}
-
-void SupportCanvas3D::setCameraAxisZ() {
-    m_defaultPerspectiveCamera->orientLook(
-                glm::vec4(0.f, 0.f, 2.f, 1.f),
-                glm::vec4(0.f, 0.f, -1.f, 0.f),
-                glm::vec4(0.f, 1.f, 0.f, 0.f));
-    update();
-}
-
-void SupportCanvas3D::setCameraAxonometric() {
-    m_defaultPerspectiveCamera->orientLook(
-                glm::vec4(2.f, 2.f, 2.f, 1.f),
-                glm::vec4(-1.f, -1.f, -1.f, 0.f),
-                glm::vec4(0.f, 1.f, 0.f, 0.f));
-    update();
-}
-
-void SupportCanvas3D::updateCameraHeightAngle() {
-    // The height angle is half the overall field of view of the camera
-    m_defaultPerspectiveCamera->setHeightAngle(settings.cameraFov);
-}
-
-void SupportCanvas3D::updateCameraTranslation() {
-    m_defaultPerspectiveCamera->translate(
-            glm::vec4(
-                settings.cameraPosX - m_oldPosX,
-                settings.cameraPosY - m_oldPosY,
-                settings.cameraPosZ - m_oldPosZ,
-                0));
-
-    m_oldPosX = settings.cameraPosX;
-    m_oldPosY = settings.cameraPosY;
-    m_oldPosZ = settings.cameraPosZ;
-}
-
-void SupportCanvas3D::updateCameraRotationU() {
-    m_defaultPerspectiveCamera->rotateU(settings.cameraRotU - m_oldRotU);
-    m_oldRotU = settings.cameraRotU;
-}
-
-void SupportCanvas3D::updateCameraRotationV() {
-    m_defaultPerspectiveCamera->rotateV(settings.cameraRotV - m_oldRotV);
-    m_oldRotV = settings.cameraRotV;
-}
-
-void SupportCanvas3D::updateCameraRotationN() {
-    m_defaultPerspectiveCamera->rotateW(settings.cameraRotN - m_oldRotN);
-    m_oldRotN = settings.cameraRotN;
-}
-
-void SupportCanvas3D::updateCameraClip() {
-    m_defaultPerspectiveCamera->setClip(settings.cameraNear, settings.cameraFar);
-}
-
 
 void SupportCanvas3D::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::RightButton) {
@@ -326,8 +210,4 @@ void SupportCanvas3D::wheelEvent(QWheelEvent *event) {
 
 void SupportCanvas3D::resizeEvent(QResizeEvent *event) {
     emit aspectRatioChanged();
-}
-
-void SupportCanvas3D::loadMesh(std::vector<Vertex> vertices, std::vector<int> indices) {
-    m_shapesScene->loadMesh(vertices, indices);
 }

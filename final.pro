@@ -22,9 +22,7 @@ win32 {
 }
 
 SOURCES += ui/mainwindow.cpp \
-    camera/CamtransCamera.cpp \
     camera/OrbitingCamera.cpp \
-    camera/QuaternionCamera.cpp \
     cs123_lib/errorchecker.cpp \
     cs123_lib/resourceloader.cpp \
     gl/GLDebug.cpp \
@@ -59,19 +57,11 @@ SOURCES += ui/mainwindow.cpp \
     scene/LScene.cpp \
     scene/OpenGLScene.cpp \
     scene/Scene.cpp \
-    scene/SceneviewScene.cpp \
-    scene/ShapesScene.cpp \
-    shapes/CircleVerticesCreator.cpp \
-    shapes/Cone.cpp \
-    shapes/Cube.cpp \
     shapes/Cylinder.cpp \
-    shapes/ExampleShape.cpp \
     shapes/LoadedMesh.cpp \
     shapes/MeshLoader.cpp \
     shapes/RectangleCreator.cpp \
     shapes/Shape.cpp \
-    shapes/Sphere.cpp \
-    shapes/Torus.cpp \
     shapes/TriangleCreator.cpp \
     ui/Databinding.cpp \
     ui/Settings.cpp \
@@ -81,9 +71,7 @@ SOURCES += ui/mainwindow.cpp \
 
 HEADERS += ui/mainwindow.h \
     camera/Camera.h \
-    camera/CamtransCamera.h \
     camera/OrbitingCamera.h \
-    camera/QuaternionCamera.h \
     cs123_lib/errorchecker.h \
     cs123_lib/resourceloader.h \
     gl/GLDebug.h \
@@ -117,20 +105,10 @@ HEADERS += ui/mainwindow.h \
     scene/LScene.h \
     scene/OpenGLScene.h \
     scene/Scene.h \
-    scene/SceneviewScene.h \
-    scene/ShapesScene.h \
-    shapes/CircleVerticesCreator \
-    shapes/CircleVerticesCreator.h \
-    shapes/Cone.h \
-    shapes/Cube.h \
     shapes/Cylinder.h \
-    shapes/ExampleShape.h \
     shapes/LoadedMesh.h \
     shapes/MeshLoader.h \
-    shapes/RectangleCreator.h \
     shapes/Shape.h \
-    shapes/Sphere.h \
-    shapes/Torus.h \
     shapes/TriangleCreator.h \
     ui/Databinding.h \
     ui/Settings.h \
