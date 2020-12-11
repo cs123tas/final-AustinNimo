@@ -155,6 +155,4 @@ int Settings::getSceneMode() {
 int Settings::getCameraMode() {
     if (this->useOrbitCamera)
         return CAMERAMODE_ORBIT;
-    else
-        return CAMERAMODE_CAMTRANS;
 }

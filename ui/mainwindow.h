@@ -57,9 +57,6 @@ private:
     // Sets up the data bindings between the UI and app settings
     void dataBind();
 
-    // initializes settings and ui for camtrans viewing frustum
-    void initializeCamtransFrustum();
-
     // [C++ Note] private members start with m_
     QList<DataBinding*> m_bindings;
     QList<QButtonGroup*> m_buttonGroups;
@@ -77,18 +74,6 @@ public slots:
     // Used internally to keep data bindings and the user interface in sync.
     void settingsChanged();
 
-    // These methods are update different aspects of the 3D camera, and delegate to the Canvas3D.
-    void setCameraAxisX();
-    void setCameraAxisY();
-    void setCameraAxisZ();
-    void updateCameraTranslation();
-    void updateCameraRotationN();
-    void updateCameraRotationV();
-    void updateCameraRotationU();
-    void resetUpVector();
-    void updateCameraClip();
-    void updateCameraHeightAngle();
-    void setCameraAxonometric();
     void loadLSystemFileButton();
     void generateRandomTreesButton();
     void clearSystemButton();

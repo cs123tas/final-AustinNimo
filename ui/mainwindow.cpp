@@ -3,7 +3,6 @@
 #include "Databinding.h"
 #include "SupportCanvas3D.h"
 #include "lib/CS123XmlSceneParser.h"
-#include "camera/CamtransCamera.h"
 #include <math.h>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -305,48 +304,4 @@ void MainWindow::setAllEnabled(bool enabled) {
         widget->setEnabled(enabled);
     foreach (QAction *action, actions)
         action->setEnabled(enabled);
-}
-
-void MainWindow::setCameraAxisX() {
-    m_canvas3D->setCameraAxisX();
-}
-
-void MainWindow::setCameraAxisY() {
-    m_canvas3D->setCameraAxisY();
-}
-
-void MainWindow::setCameraAxisZ() {
-    m_canvas3D->setCameraAxisZ();
-}
-
-void MainWindow::updateCameraTranslation() {
-    m_canvas3D->updateCameraTranslation();
-}
-
-void MainWindow::updateCameraRotationN() {
-    m_canvas3D->updateCameraRotationN();
-}
-
-void MainWindow::updateCameraRotationV() {
-    m_canvas3D->updateCameraRotationV();
-}
-
-void MainWindow::updateCameraRotationU() {
-    m_canvas3D->updateCameraRotationU();
-}
-
-void MainWindow::resetUpVector() {
-    m_canvas3D->resetUpVector();
-}
-
-void MainWindow::updateCameraClip() {
-    m_canvas3D->updateCameraClip();
-}
-
-void MainWindow::updateCameraHeightAngle() {
-    m_canvas3D->updateCameraHeightAngle();
-}
-
-void MainWindow::setCameraAxonometric() {
-    m_canvas3D->setCameraAxonometric();
 }

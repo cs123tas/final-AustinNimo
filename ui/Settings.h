@@ -61,8 +61,7 @@ enum SceneMode {
 
 // Enumeration values for the currently selected camera type
 enum CameraMode {
-    CAMERAMODE_ORBIT,
-    CAMERAMODE_CAMTRANS
+    CAMERAMODE_ORBIT
 };
 
 /**

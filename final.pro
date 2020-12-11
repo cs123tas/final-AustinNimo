@@ -22,9 +22,7 @@ win32 {
 }
 
 SOURCES += ui/mainwindow.cpp \
-    camera/CamtransCamera.cpp \
     camera/OrbitingCamera.cpp \
-    camera/QuaternionCamera.cpp \
     cs123_lib/errorchecker.cpp \
     cs123_lib/resourceloader.cpp \
     gl/GLDebug.cpp \
@@ -73,9 +71,7 @@ SOURCES += ui/mainwindow.cpp \
 
 HEADERS += ui/mainwindow.h \
     camera/Camera.h \
-    camera/CamtransCamera.h \
     camera/OrbitingCamera.h \
-    camera/QuaternionCamera.h \
     cs123_lib/errorchecker.h \
     cs123_lib/resourceloader.h \
     gl/GLDebug.h \
