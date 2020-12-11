@@ -51,7 +51,7 @@ public:
     void loadSceneviewSceneFromParser(CS123XmlSceneParser &parser);
     void switchToSceneviewScene();
     void switchToShapesScene();
-
+    void initializeGLFragmentShaders();
     // Copies pixels from the OpenGL render buffer into a standard bitmap image, using row-major
     // order and RGBA data format.
     void copyPixels(int width, int height, RGBA *data);
@@ -116,6 +116,7 @@ private:
     std::unique_ptr<CS123::GL::CS123Shader> m_shader;
 
     Terrain m_terrain;
+    GLuint m_textureID;
     glm::mat4 m_model;
     std::unique_ptr<CamtransCamera> m_defaultPerspectiveCamera;
     std::unique_ptr<OrbitingCamera> m_defaultOrbitingCamera;

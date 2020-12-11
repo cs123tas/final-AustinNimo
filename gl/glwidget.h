@@ -31,12 +31,12 @@ protected:
     void mousePressEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
     void wheelEvent(QWheelEvent *e);
-
+    void initializeGLFragmentShaders();
 private:
     void rebuildMatrices();
 
     /** ID for the shader program. */
-    GLuint m_program;
+    GLuint m_program,m_textureID;
 
     std::unique_ptr<CS123::GL::CS123Shader> m_shader;
 

@@ -20,6 +20,8 @@ private:
     float getNoiseValue(int row, int col, float octave);
     glm::vec3 getPosition(int row, int col);
     glm::vec3 getNormal(int row, int col);
+    glm::vec3 generate_biome(glm::vec3 position, int row, int col);
+
     std::unique_ptr<OpenGLShape> m_shape;
     const float m_numRows, m_numCols;
 };

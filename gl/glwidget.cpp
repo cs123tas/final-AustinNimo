@@ -20,20 +20,28 @@ void GLWidget::initializeGL() {
 
     resizeGL(width(), height());
 
-//    glEnable(GL_DEPTH_TEST);
-//    glEnable(GL_CULL_FACE);
-
-//    // Set the color to set the screen when the color buffer is cleared.
-//    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-    //m_program = ResourceLoader::createShaderProgram(":/shaders/terrain/terrainShader.vert", ":/shaders/terrain/terrainShader.frag");
 
     std::string vertexSource = FileResourceLoader::loadResourceFileToString(":/shaders/terrain.vert");
     std::string fragmentSource = FileResourceLoader::loadResourceFileToString(":/shaders/terrain.frag");
     m_shader = std::make_unique<CS123Shader>(vertexSource, fragmentSource);
-    m_terrain.init();
 
+    m_terrain.init();
+    initializeGLFragmentShaders();
     rebuildMatrices();
+}
+void GLWidget::initializeGLFragmentShaders() {
+
+    QImage image(":/shaders/cliff.jpg");
+
+    glGenTextures(1,&m_textureID);
+    glBindTexture(GL_TEXTURE_2D,m_textureID);
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,image.width(),image.height(),0,GL_RGBA,GL_UNSIGNED_BYTE,image.bits());
+
+
 }
 
 void GLWidget::paintGL() {
@@ -46,10 +54,6 @@ void GLWidget::paintGL() {
 
     m_shader->bind();
 
-    // Set uniforms.
-//    glUniformMatrix4fv(glGetUniformLocation(m_program, "model"), 1, GL_FALSE, glm::value_ptr(m_model));
-//    glUniformMatrix4fv(glGetUniformLocation(m_program, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
-//    glUniformMatrix4fv(glGetUniformLocation(m_program, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
 
     m_shader->setUniform("model", glm::value_ptr(m_model));
     m_shader->setUniform("view", glm::value_ptr(m_view));

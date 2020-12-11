@@ -197,4 +197,5 @@ DISTFILES += \
     shaders/terrainshader.frag \
     shaders/terrainshader.vert \
     shaders/wireframe/wireframe.frag \
-    shaders/wireframe/wireframe.vert
+    shaders/wireframe/wireframe.vert \
+    ui/cliff.jpg

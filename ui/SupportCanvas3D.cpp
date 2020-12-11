@@ -75,14 +75,26 @@ void SupportCanvas3D::initializeGL() {
     settingsChanged();
 
     m_model = glm::mat4(1.f);
-
+    initializeGLFragmentShaders();
     std::string vertexSource = FileResourceLoader::loadResourceFileToString(":/shaders/terrain.vert");
     std::string fragmentSource = FileResourceLoader::loadResourceFileToString(":/shaders/terrain.frag");
     m_shader = std::make_unique<CS123Shader>(vertexSource, fragmentSource);
     m_terrain.init();
+    initializeGLFragmentShaders();
 
 }
+void SupportCanvas3D::initializeGLFragmentShaders() {
 
+    QImage image(":/cliff.jpg");
+
+    glGenTextures(1,&m_textureID);
+
+//    glBindTexture(GL_TEXTURE_2D, m_textureID);
+     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+
+     glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,image.width(),image.height(),0,GL_RGBA,GL_UNSIGNED_BYTE,image.bits());
+}
 void SupportCanvas3D::initializeGlew() {
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
@@ -129,7 +141,9 @@ void SupportCanvas3D::paintGL() {
     float ratio = static_cast<QGuiApplication *>(QCoreApplication::instance())->devicePixelRatio();
     glViewport(0, 0, width() * ratio, height() * ratio);
     getCamera()->setAspectRatio(static_cast<float>(width()) / static_cast<float>(height()));
+    //initializeGLFragmentShaders();
     m_currentScene->render(this);
+    //initializeGLFragmentShaders();
 
 //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -144,7 +158,7 @@ void SupportCanvas3D::paintGL() {
 //    glUniformMatrix4fv(glGetUniformLocation(m_program, "model"), 1, GL_FALSE, glm::value_ptr(m_model));
 //    glUniformMatrix4fv(glGetUniformLocation(m_program, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
 //    glUniformMatrix4fv(glGetUniformLocation(m_program, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
-
+   // initializeGLFragmentShaders();
     m_shader->setUniform("model", m_model);
     m_shader->setUniform("view", getCamera()->getViewMatrix());
     m_shader->setUniform("projection", getCamera()->getProjectionMatrix());
