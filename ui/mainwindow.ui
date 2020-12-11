@@ -104,7 +104,7 @@
        <property name="geometry">
         <rect>
          <x>60</x>
-         <y>640</y>
+         <y>690</y>
          <width>193</width>
          <height>23</height>
         </rect>
@@ -162,6 +162,19 @@
         </rect>
        </property>
       </widget>
+      <widget class="QPushButton" name="generateRandomTreesButton">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>600</y>
+         <width>193</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Generate Random Trees</string>
+       </property>
+      </widget>
       <zorder>useLightingCheckbox</zorder>
       <zorder>canvas3D</zorder>
       <zorder>loadLSystemFileButton</zorder>
@@ -172,6 +185,7 @@
       <zorder>angleLabel</zorder>
       <zorder>angleLabel_2</zorder>
       <zorder>treeSizes</zorder>
+      <zorder>generateRandomTreesButton</zorder>
      </widget>
     </item>
    </layout>

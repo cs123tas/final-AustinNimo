@@ -93,6 +93,7 @@ public slots:
     void updateCameraHeightAngle();
     void setCameraAxonometric();
     void loadLSystemFileButton();
+    void generateRandomTreesButton();
     void clearSystemButton();
 };
 
