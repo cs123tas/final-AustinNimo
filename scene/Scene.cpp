@@ -6,11 +6,7 @@
 #include "glm/gtx/transform.hpp"
 #include <glm/gtx/transform2.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
-#include "shapes/Cube.h"
-#include "shapes/Cone.h"
 #include "shapes/Cylinder.h"
-#include "shapes/Sphere.h"
-#include "shapes/Torus.h"
 #include "shapes/LoadedMesh.h"
 #include "Settings.h"
 #include "lib/Vertex.h"
@@ -54,14 +50,6 @@ void Scene::buildShapes(float divider, bool adjustment = false) {
         m_comp2 = comp2;
         m_comp3 = comp3;
 
-        m_cube = std::make_unique<Cube>(comp1);
-        m_cube->buildVAO();
-        m_cone = std::make_unique<Cone>(comp1, comp2);
-        m_cone->buildVAO();
-        m_torus = std::make_unique<Torus>(comp1, comp2, comp3);
-        m_torus->buildVAO();
-        m_sphere = std::make_unique<Sphere>(comp1, comp2);
-        m_sphere->buildVAO();
         m_cylinder = std::make_unique<Cylinder>(comp1, comp2);
         m_cylinder->buildVAO();
     }

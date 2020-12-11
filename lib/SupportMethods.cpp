@@ -166,7 +166,6 @@ std::vector<std::string> SupportMethods::splitMatchesRegex(std::string s, std::r
   while (regex_search(s, m, r))  // <-- use it here to get the match
   {
     int split_on = m.position(); // <-- use the match position
-    int length = m.length();
     splits.push_back(s.substr(0, split_on + m.length()));
     s = s.substr(split_on + m.length());
   }

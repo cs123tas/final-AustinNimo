@@ -15,8 +15,6 @@
 class RGBA;
 class Camera;
 class OpenGLScene;
-class ShapesScene;
-class SceneviewScene;
 class OrbitingCamera;
 class CamtransCamera;
 class CS123XmlSceneParser;
@@ -49,8 +47,6 @@ public:
     OpenGLScene *getScene() { return m_currentScene; }
 
     void loadSceneviewSceneFromParser(CS123XmlSceneParser &parser);
-    void switchToSceneviewScene();
-    void switchToShapesScene();
 
     // Copies pixels from the OpenGL render buffer into a standard bitmap image, using row-major
     // order and RGBA data format.
@@ -76,9 +72,6 @@ public slots:
     void updateCameraRotationV();
     void updateCameraRotationN();
     void updateCameraClip();
-
-    // This is called to load a mesh file
-    void loadMesh(std::vector<Vertex> vertices, std::vector<int> indices);
 
 signals:
     void aspectRatioChanged();
@@ -120,8 +113,6 @@ private:
     std::unique_ptr<CamtransCamera> m_defaultPerspectiveCamera;
     std::unique_ptr<OrbitingCamera> m_defaultOrbitingCamera;
     OpenGLScene *m_currentScene;
-    std::unique_ptr<ShapesScene> m_shapesScene;
-    std::unique_ptr<SceneviewScene> m_sceneviewScene;
 };
 
 #endif // SUPPORTCANVAS3D_H

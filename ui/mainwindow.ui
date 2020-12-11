@@ -203,11 +203,8 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="actionNew"/>
-    <addaction name="actionOpen"/>
     <addaction name="actionUseOrbitingCamera"/>
     <addaction name="separator"/>
-    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuToolbars">
     <property name="title">
@@ -217,65 +214,6 @@
    <addaction name="menuFile"/>
    <addaction name="menuToolbars"/>
   </widget>
-  <action name="actionNew">
-   <property name="text">
-    <string>&amp;New</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+N</string>
-   </property>
-  </action>
-  <action name="actionOpen">
-   <property name="text">
-    <string>&amp;Open...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+O</string>
-   </property>
-  </action>
-  <action name="actionSave">
-   <property name="text">
-    <string>&amp;Save...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+S</string>
-   </property>
-  </action>
-  <action name="actionQuit">
-   <property name="text">
-    <string>&amp;Quit</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Q</string>
-   </property>
-  </action>
-  <action name="actionRevert">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;Revert Image</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+R</string>
-   </property>
-  </action>
-  <action name="actionCopy3Dto2D">
-   <property name="text">
-    <string>Copy &amp;3D tab to 2D tab</string>
-   </property>
-  </action>
-  <action name="actionClear">
-   <property name="text">
-    <string>&amp;Clear Image</string>
-   </property>
-   <property name="toolTip">
-    <string>Clear Image</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+C</string>
-   </property>
-  </action>
   <action name="actionUseOrbitingCamera">
    <property name="checkable">
     <bool>true</bool>
@@ -290,40 +228,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections>
-  <connection>
-   <sender>actionQuit</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>299</x>
-     <y>199</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionOpen</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>fileOpen()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>299</x>
-     <y>1165</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>checkAllRayFeatures()</slot>
   <slot>uncheckAllRayFeatures()</slot>

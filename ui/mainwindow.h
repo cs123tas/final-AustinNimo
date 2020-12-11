@@ -77,9 +77,6 @@ public slots:
     // Used internally to keep data bindings and the user interface in sync.
     void settingsChanged();
 
-    // Displays a dialog box to open a 2D image or 3D scene file.
-    void fileOpen();
-
     // These methods are update different aspects of the 3D camera, and delegate to the Canvas3D.
     void setCameraAxisX();
     void setCameraAxisY();

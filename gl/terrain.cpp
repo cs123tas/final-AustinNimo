@@ -112,16 +112,14 @@ glm::vec3 Terrain::getNormal(int row, int col) {
         vectors[i] = positions[0] - positions[i + 1];
     }
 
-    glm::vec3 normals[8];
-
     for (int i = 0; i < 7; i++) {
         vectors[i] = glm::cross(positions[i + 1], positions[i]);
     }
     vectors[7] = glm::cross(positions[0], positions[7]);
 
-    float x;
-    float y;
-    float z;
+    float x = 0.0;
+    float y = 0.0;
+    float z = 0.0;
 
     for (int i = 0; i < 8; i ++) {
         x += vectors[i].x;

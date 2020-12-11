@@ -8,9 +8,7 @@
 #include "lib/RGBA.h"
 #include "camera/CamtransCamera.h"
 #include "camera/OrbitingCamera.h"
-#include "scene/SceneviewScene.h"
 #include "Settings.h"
-#include "scene/ShapesScene.h"
 
 #include <iostream>
 #include "gl/GLDebug.h"
@@ -115,8 +113,6 @@ void SupportCanvas3D::initializeOpenGLSettings() {
 }
 
 void SupportCanvas3D::initializeScenes() {
-    m_sceneviewScene = std::make_unique<SceneviewScene>();
-    m_shapesScene = std::make_unique<ShapesScene>(width(), height());
     m_lScene = std::make_unique<LScene>();
 
 }
@@ -173,28 +169,8 @@ void SupportCanvas3D::setSceneFromSettings() {
         case SCENEMODE_SHAPES:
             setSceneToL();
             break;
-
-        case SCENEMODE_SCENEVIEW:
-            setSceneToSceneview();
-            break;
     }
     m_settingsDirty = false;
-}
-
-void SupportCanvas3D::loadSceneviewSceneFromParser(CS123XmlSceneParser &parser) {
-    m_sceneviewScene = std::make_unique<SceneviewScene>();
-    Scene::parse(m_sceneviewScene.get(), &parser);
-    m_settingsDirty = true;
-}
-
-void SupportCanvas3D::setSceneToSceneview() {
-    assert(m_sceneviewScene.get());
-    m_currentScene = m_sceneviewScene.get();
-}
-
-void SupportCanvas3D::setSceneToShapes() {
-    assert(m_shapesScene.get());
-    m_currentScene = m_shapesScene.get();
 }
 
 void SupportCanvas3D::setSceneToL() {
@@ -326,8 +302,4 @@ void SupportCanvas3D::wheelEvent(QWheelEvent *event) {
 
 void SupportCanvas3D::resizeEvent(QResizeEvent *event) {
     emit aspectRatioChanged();
-}
-
-void SupportCanvas3D::loadMesh(std::vector<Vertex> vertices, std::vector<int> indices) {
-    m_shapesScene->loadMesh(vertices, indices);
 }

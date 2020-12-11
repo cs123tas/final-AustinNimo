@@ -3,8 +3,6 @@
 #include "Databinding.h"
 #include "SupportCanvas3D.h"
 #include "lib/CS123XmlSceneParser.h"
-#include "scene/ShapesScene.h"
-#include "scene/SceneviewScene.h"
 #include "camera/CamtransCamera.h"
 #include <math.h>
 #include <QFileDialog>
@@ -12,6 +10,7 @@
 #include "shapes/MeshLoader.h"
 #include "lib/Vertex.h"
 #include "l-systems/generator.h"
+#include "Settings.h"
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/quaternion.hpp>
 
@@ -161,6 +160,7 @@ QString getTreeFile(int num) {
         break;
     }
     }
+    return "";
 }
 
 void MainWindow::generateRandomTreesButton() {
@@ -296,54 +296,10 @@ void MainWindow::settingsChanged() {
     m_canvas3D->settingsChanged();
 }
 
-void MainWindow::fileOpen() {
-    // This opens the 3D tab to initialize OGL so parsing
-    // the scene doesn't crash. If you can find a better solution
-    // feel free to change this.
-    QString file = QFileDialog::getOpenFileName(this, QString(), "/course/cs123/data/");
-    if (!file.isNull()) {
-        if (file.endsWith(".xml")) {
-            CS123XmlSceneParser parser(file.toLatin1().data());
-            if (parser.parse()) {
-                m_canvas3D->loadSceneviewSceneFromParser(parser);
-
-                // Set the camera for the new scene
-                CS123SceneCameraData camera;
-                if (parser.getCameraData(camera)) {
-                    camera.pos[3] = 1;
-                    camera.look[3] = 0;
-                    camera.up[3] = 0;
-
-                    CamtransCamera *cam = m_canvas3D->getCamtransCamera();
-                    cam->orientLook(camera.pos, camera.look, camera.up);
-                    cam->setHeightAngle(camera.heightAngle);
-                }
-
-            } else {
-                QMessageBox::critical(this, "Error", "Could not load scene \"" + file + "\"");
-            }
-        } else if (file.endsWith(".obj")) {
-            MeshLoader loader;
-            loader.loadMesh(file.toLatin1().data());
-            std::vector<Vertex> vertices = loader.getVertices();
-            std::vector<int> indices = loader.getIndices();
-            m_canvas3D->loadMesh(vertices, indices);
-
-        }
-    }
-}
-
 void MainWindow::setAllEnabled(bool enabled) {
     QList<QWidget *> widgets;
 
     QList<QAction *> actions;
-    actions += ui->actionNew;
-    actions += ui->actionOpen;
-    actions += ui->actionSave;
-    actions += ui->actionRevert;
-    actions += ui->actionCopy3Dto2D;
-    actions += ui->actionClear;
-    actions += ui->actionQuit;
 
     foreach (QWidget *widget, widgets)
         widget->setEnabled(enabled);
