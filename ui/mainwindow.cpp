@@ -16,6 +16,7 @@
 #include <glm/gtx/quaternion.hpp>
 
 const QString DEFAULT_FOLDER = "D:\\Nodal\\Documents\\GitHub\\final-AustinNimo\\l-systems";
+const int NUM_TREES = 20;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -66,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Connect button signal to appropriate slot
      connect(ui->loadLSystemFileButton, &QPushButton::released, this, &MainWindow::loadLSystemFileButton);
      connect(ui->clearSystemButton, &QPushButton::released, this, &MainWindow::clearSystemButton);
+     connect(ui->generateRandomTreesButton, &QPushButton::released, this, &MainWindow::generateRandomTreesButton);
 
 }
 
@@ -134,6 +136,54 @@ void MainWindow::loadLSystemFileButton() {
 
 void MainWindow::clearSystemButton() {
     clearTrees();
+}
+
+QString getTreeFile(int num) {
+    switch(num % 5) {
+    case 0: {
+        return QString(":/l-systems/l-systems/OakFall.txt");
+        break;
+    }
+    case 1: {
+        return QString(":/l-systems/l-systems/OakSummer.txt");
+        break;
+    }
+    case 2: {
+        return QString(":/l-systems/l-systems/OakWinter.txt");
+        break;
+    }
+    case 3: {
+        return QString(":/l-systems/l-systems/ScarletMaple.txt");
+        break;
+    }
+    case 4: {
+        return QString(":/l-systems/l-systems/Sakura.txt");
+        break;
+    }
+    }
+}
+
+void MainWindow::generateRandomTreesButton() {
+
+    // Generate positions for trees
+    std::vector<glm::vec3> treeLocations = m_canvas3D->m_terrain.getlocations(NUM_TREES);
+    std::vector<glm::vec3> treeLocs;
+    std::vector<glm::vec3> treeAngles;
+    for(int i = 0; i < 5; i++) {
+        treeLocs.clear();
+        treeAngles.clear();
+        int index = i * 2;
+        while (index < NUM_TREES * 2) {
+            std::cout << index << " loc " << treeLocations[index].x <<":"<< treeLocations[index].y <<":"<< treeLocations[index].z <<
+                         " ang " << treeLocations[index + 1].x << ":"  << treeLocations[index + 1].y << ":"  << treeLocations[index + 1].z << std::endl;
+            treeLocs.push_back(treeLocations[index]);
+//            treeAngles.push_back(treeLocations[index + 1]);
+            treeAngles.push_back({0.0,1.0,0.0});
+            // 5 types of trees, locs and angles
+            index += 5 * 2;
+        }
+        generateTrees(getTreeFile(i), treeLocs, treeAngles, {.1,.1,.1});
+    }
 }
 
 void MainWindow::generateTrees(QString fileName,

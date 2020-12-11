@@ -14,6 +14,7 @@ public:
 
     void init();
     void draw();
+    std::vector<glm::vec3> getlocations(int num);
 
 private:
     float randValue(int row, int col);

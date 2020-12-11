@@ -59,6 +59,7 @@ public:
     // This function will be called by the UI when the settings have changed.
     virtual void settingsChanged();
     std::unique_ptr<LScene> m_lScene;
+    Terrain m_terrain;
 
 public slots:
     // These will be called by the corresponding UI buttons on the Camtrans dock
@@ -115,7 +116,6 @@ private:
 
     std::unique_ptr<CS123::GL::CS123Shader> m_shader;
 
-    Terrain m_terrain;
     glm::mat4 m_model;
     std::unique_ptr<CamtransCamera> m_defaultPerspectiveCamera;
     std::unique_ptr<OrbitingCamera> m_defaultOrbitingCamera;

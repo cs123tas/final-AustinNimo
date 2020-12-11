@@ -2,6 +2,9 @@
 
 #include <math.h>
 #include "gl/shaders/ShaderAttribLocations.h"
+#include <random>
+#include <algorithm>
+#include <chrono>
 
 Terrain::Terrain() : m_numRows(100), m_numCols(m_numRows)
 {
@@ -53,6 +56,36 @@ glm::vec3 Terrain::getPosition(int row, int col) {
     return position;
 }
 
+
+std::vector<glm::vec3> Terrain::getlocations(int num) {
+    std::vector<glm::vec3> returnVector;
+
+    std::default_random_engine generator;
+    generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
+    std::uniform_int_distribution<int> rows(0,m_numRows);
+    std::uniform_int_distribution<int> cols(0,m_numCols);
+
+    int row;
+    int col;
+
+    for (int i=0; i<num; i++)
+    {
+        row = rows(generator);
+        col = cols(generator);
+
+        glm::vec3 pos = getPosition(row, col);
+
+        if (std::count(returnVector.begin(), returnVector.end(), pos)) {
+            i = i - 1;
+        }
+        else {
+            returnVector.push_back(pos);
+            returnVector.push_back(getNormal(row, col));
+        }
+    }
+
+    return returnVector;
+}
 
 
 
